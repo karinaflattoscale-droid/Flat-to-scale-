@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flat 2 Scale Members App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: app shell, left nav on desktop, bottom tab bar on phones */
+  --navy:#17283F; --teal:#4F8886; --teal-soft:#E3EEED;
+  --bg:#F4F6F8; --surface:#FFFFFF; --ink:#17283F; --muted:#5B6878; --line:#DCE2E8;
+  --lock:#9AA5B1; --good:#2F7D5B;
+  --display:"Sora", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1A29; --surface:#17283F; --ink:#E8EEF3; --muted:#A3B0BE; --line:#2A3D57;
+    --teal-soft:#21403F; --lock:#6C7A8A; --good:#5FBF93; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1A29; --surface:#17283F; --ink:#E8EEF3; --muted:#A3B0BE; --line:#2A3D57;
+  --teal-soft:#21403F; --lock:#6C7A8A; --good:#5FBF93; color-scheme: dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:1.6rem} h2{font-size:1.2rem} h3{font-size:1rem}
+button,input,select{font:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.demo-bar{background:var(--teal);color:#fff;font-size:.9rem;padding:8px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.demo-bar label{display:flex;gap:8px;align-items:center}
+.demo-bar select{border-radius:6px;border:0;padding:2px 6px}
+/* Login */
+.login{min-height:calc(100% - 40px);display:grid;place-items:center;padding:24px 16px}
+.login-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:32px 28px;width:100%;max-width:400px;display:grid;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.15rem}
+.mark{width:34px;height:34px;border-radius:8px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:.8rem;letter-spacing:.02em;border:2px solid var(--teal)}
+.field{display:grid;gap:4px}
+.field label{font-weight:600;font-size:.92rem}
+.field input,.field select{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:600}
+:root[data-theme="dark"] .btn{background:var(--teal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{background:var(--teal)}}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:transparent;color:#B4443A;border:1px solid var(--line)}
+.small{font-size:.88rem;color:var(--muted)}
+/* Shell */
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:calc(100% - 40px)}
+nav.side{background:var(--navy);color:#fff;padding:20px 14px;display:flex;flex-direction:column;gap:6px}
+nav.side .brand{color:#fff;margin:0 6px 18px}
+.navbtn{background:transparent;border:0;color:#C9D4DF;text-align:left;padding:10px 12px;border-radius:8px;font-weight:600;display:flex;gap:10px;align-items:center}
+.navbtn[aria-current="page"]{background:rgba(79,136,134,.35);color:#fff}
+.navbtn svg{width:18px;height:18px;flex:none}
+main{padding:28px 32px;display:grid;gap:22px;align-content:start;max-width:1100px;width:100%}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:600;background:var(--teal-soft);color:var(--ink)}
+.pill.lock{background:transparent;border:1px dashed var(--lock);color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:10px;align-content:start}
+.card.locked{opacity:.75}
+.card .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--teal)}
+.note{border-left:4px solid var(--teal);background:var(--surface);padding:10px 14px;border-radius:0 8px 8px 0;font-size:.92rem;color:var(--muted)}
+ol.lessons{margin:0;padding-left:20px;display:grid;gap:4px}
+ol.lessons li.done{color:var(--muted);text-decoration:line-through}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.calc .field{align-content:end}
+.result{font-family:var(--display);font-size:1.5rem;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-size:.95rem}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.plan{border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;background:var(--surface)}
+.plan.current{border:2px solid var(--teal)}
+.plan ul{margin:0;padding-left:18px;font-size:.92rem}
+.dialog{position:fixed;inset:0;background:rgba(15,26,41,.55);display:none;place-items:center;padding:16px}
+.dialog.open{display:grid}
+.dialog .card{max-width:420px}
+@media (max-width:760px){
+  .shell{grid-template-columns:1fr;padding-bottom:66px}
+  nav.side{position:fixed;bottom:0;left:0;right:0;flex-direction:row;justify-content:space-around;padding:6px;z-index:5}
+  nav.side .brand{display:none}
+  .navbtn{flex-direction:column;gap:2px;font-size:.75rem;padding:6px 8px}
+  main{padding:20px 16px}
+}
+@media (prefers-reduced-motion:no-preference){.bar span{transition:width .4s}}
+</style>
+</head>
+<body>
+<div class="demo-bar">
+  <span><strong>Prototype.</strong> No real accounts or payments. Tools, courses and plan contents are examples for Zebo to replace.</span>
+  <label for="demoPlan">Preview as
+    <select id="demoPlan"><option value="basic">Basic</option><option value="premium" selected>Premium</option><option value="full">Full</option></select>
+  </label>
+</div>
+
+<section class="login" id="login" hidden>
+  <form class="login-card" id="loginForm">
+    <div class="brand"><span class="mark">F2S</span>Flat 2 Scale</div>
+    <h1>Sign in to your toolkit</h1>
+    <div class="field"><label for="email">Email</label><input id="email" type="email" value="member@example.com" required></div>
+    <div class="field"><label for="pw">Password</label><input id="pw" type="password" value="demo-password" required></div>
+    <button class="btn" type="submit">Sign in</button>
+    <p class="small">New here? Plans are bought on the Flat 2 Scale website, then you sign in here with the same email.</p>
+  </form>
+</section>
+
+<div class="shell" id="app" hidden>
+  <nav class="side" aria-label="Main">
+    <div class="brand"><span class="mark">F2S</span>Flat 2 Scale</div>
+    <button class="navbtn" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+    <button class="navbtn" data-view="tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2"/></svg>Tools</button>
+    <button class="navbtn" data-view="courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l10-4 10 4-10 4z"/><path d="M6 9v6c3 2 9 2 12 0V9"/></svg>Courses</button>
+    <button class="navbtn" data-view="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg>Account</button>
+  </nav>
+  <main id="main"></main>
+</div>
+
+<div class="dialog" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+  <div class="card"><h2 id="dlgTitle"></h2><p id="dlgText" class="small"></p>
+    <div class="row" style="justify-content:flex-end;gap:8px;display:flex"><button class="btn ghost" id="dlgCancel">Close</button><button class="btn" id="dlgOk">Confirm</button></div>
+  </div>
+</div>
+
+<script>
+const RANK={basic:1,premium:2,full:3};
+const PLAN_NAME={basic:"Basic",premium:"Premium",full:"Full"};
+const PLANS=[
+  {id:"basic",price:"Price set by Zebo",items:["Starter checklists: onboarding, setup and regular cleaning","Course 1: Launch your first furnished rental","Monthly member email"]},
+  {id:"premium",price:"Price set by Zebo",items:["Everything in Basic","Furnishing, moodboard, utilities, consumables and refresh cleaning","Course 2: Mid-term rentals (90+ nights)"]},
+  {id:"full",price:"Price set by Zebo",items:["Everything in Premium","Course 3: Scaling to 5+ units","Quarterly business review with Zebo"]}
+];
+const TOOLS=[
+  {id:"onboard",name:"Onboarding and listing checklist",desc:"What to have ready, what to highlight in your ad, photo orientation and shot list.",plan:"basic",type:"Checklist"},
+  {id:"setupclean",name:"Setup cleaning checklist",desc:"The deep clean before your first guest, room by room.",plan:"basic",type:"Checklist"},
+  {id:"regclean",name:"Regular cleaning checklist",desc:"The turnover clean between stays.",plan:"basic",type:"Checklist"},
+  {id:"calc",name:"Rental profit calculator",desc:"Monthly revenue, costs and profit for one unit.",plan:"basic",type:"Calculator"},
+  {id:"furnish",name:"Furnishing checklist",desc:"Adapts to your guest type, budget and style.",plan:"premium",type:"Checklist"},
+  {id:"mood",name:"Moodboard generator",desc:"Answer a few questions and get a sample moodboard for each room.",plan:"premium",type:"Tool"},
+  {id:"utilities",name:"Utilities and WiFi setup",desc:"Setup steps, provider options and useful contacts for your city.",plan:"premium",type:"Checklist"},
+  {id:"consumables",name:"Final touches and consumables",desc:"What to stock, with quantities worked out for your guests and rooms.",plan:"premium",type:"Checklist"},
+  {id:"refresh",name:"Refresh cleaning checklist",desc:"Mid-stay clean for 90+ night guests.",plan:"premium",type:"Checklist"},
+  {id:"occ",name:"Occupancy and revenue tracker",desc:"Track nights booked and income per month.",plan:"premium",type:"Tracker"},
+  {id:"portfolio",name:"Portfolio dashboard",desc:"All units side by side: revenue, costs, margin.",plan:"full",type:"Tracker"}
+];
+const CHECKS={
+  onboard:["Lease or ownership papers ready","House rules written","Wi-Fi name and password ready","Listing title names the area and the stay length","Highlight: workspace, washer, parking, transit","Photos in landscape orientation, daylight, lights on","Shot list: living room, each bedroom, kitchen, bathroom, workspace, view"],
+  setupclean:["Dust top to bottom: lights, shelves, frames","Inside cupboards, drawers and appliances","Kitchen: oven, fridge, extractor","Bathroom: descale shower, taps, grout","Windows and sills","Floors last: vacuum, then mop"],
+  regclean:["Strip beds, fresh linen","Towels replaced","Kitchen and bathroom wiped and disinfected","Rubbish out, bins relined","Restock consumables","Check for damage and lost items, take photos"],
+  furnish:["Bed and mattress protector per bedroom","Blackout curtains","Desk and good chair (90+ night guests work from home)","Full kitchen set","Iron, hairdryer, drying rack","Storage: wardrobe space, hangers"],
+  mood:["Style chosen: calm neutral, warm modern or bright coastal","Budget per room set","Sample board generated for living room","Sample board generated for bedroom"],
+  utilities:["Electricity account in your name","Gas or heating set up","Water account","Internet: order at least 4 weeks before move-in","Router placed centrally, password set","Provider contacts saved for your city"],
+  refresh:["Change linen and towels","Bathroom and kitchen deep wipe","Check consumables and restock","Check for maintenance issues","Short note to the guest"]
+};
+let done={};
+const COURSES=[
+  {name:"Launch your first furnished rental",plan:"basic",lessons:["Is this market right for you?","Finding the apartment","Furnishing on a budget","Listing and pricing","Your first guest"],done:3},
+  {name:"Mid-term rentals (90+ nights)",plan:"premium",lessons:["Who books 90+ nights","Pricing by the month","Leases and deposits","Finding corporate and medical guests"],done:1},
+  {name:"Scaling to 5+ units",plan:"full",lessons:["When to add the next unit","Hiring cleaners and a co-host","Systems and automation","Financing growth"],done:0}
+];
+let plan="premium", view="home", signedIn=false;
+const $=s=>document.querySelector(s);
+const has=p=>RANK[plan]>=RANK[p];
+try{const v=localStorage.getItem("f2sView"); if(v) view=v;}catch(e){}
+
+function lockPill(p){return `<span class="pill lock" aria-label="Locked">&#128274; ${PLAN_NAME[p]} plan</span>`}
+
+function render(){
+  $("#login").hidden=signedIn; $("#app").hidden=!signedIn;
+  if(!signedIn) return;
+  document.querySelectorAll(".navbtn").forEach(b=>b.setAttribute("aria-current",b.dataset.view===view?"page":"false"));
+  $("#main").innerHTML=({home,tools,courses,account})[view]();
+  bind();
+}
+function header(t,sub){return `<div class="top"><div><h1>${t}</h1>${sub?`<p class="small" style="margin:4px 0 0">${sub}</p>`:""}</div><span class="pill">${PLAN_NAME[plan]} plan</span></div>`}
+
+function home(){
+  const c=COURSES.find(c=>has(c.plan)&&c.done<c.lessons.length)||COURSES[0];
+  const pct=Math.round(c.done/c.lessons.length*100);
+  const myTools=TOOLS.filter(t=>has(t.plan));
+  return header("Welcome back","Pick up where you left off.")+`
+  <div class="grid">
+    <div class="card"><span class="small">Continue course</span><h2>${c.name}</h2>
+      <div class="bar" aria-label="${pct}% complete"><span style="width:${pct}%"></span></div>
+      <div class="row"><span class="small">${c.done} of ${c.lessons.length} lessons</span><button class="btn" data-go="courses">Continue</button></div></div>
+    <div class="card"><span class="small">Your tools</span><h2>${myTools.length} of ${TOOLS.length} unlocked</h2>
+      <p class="small" style="margin:0">${myTools.slice(0,3).map(t=>t.name).join(" · ")}</p>
+      <div class="row"><span></span><button class="btn ghost" data-go="tools">Open tools</button></div></div>
+    <div class="card"><span class="small">Next payment</span><h2>1 December 2026</h2>
+      <p class="small" style="margin:0">${PLAN_NAME[plan]} plan, renews monthly.</p>
+      <div class="row"><span></span><button class="btn ghost" data-go="account">Manage plan</button></div></div>
+  </div>
+  <div class="note">Example content. Zebo writes the real tools and lessons; the app only holds and unlocks them by plan.</div>`;
+}
+
+function tools(){
+  return header("Tools","Checklists, calculators, trackers and tools for your rentals.")+`
+  <div class="grid">${TOOLS.map(t=>{const ok=has(t.plan);return `
+    <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${t.type}</span>${ok?"":lockPill(t.plan)}</div>
+      <h3>${t.name}</h3><p class="small" style="margin:0">${t.desc}</p>
+      <div class="row"><span></span>${ok?`<button class="btn ${t.id==="calc"?"":"ghost"}" data-tool="${t.id}">Open</button>`:`<button class="btn ghost" data-upgrade="${t.plan}">Upgrade to ${PLAN_NAME[t.plan]}</button>`}</div></div>`}).join("")}</div>
+  <div id="toolPanel"></div>
+  <div class="card" id="calcCard"><h2>Rental profit calculator</h2>
+    <p class="small" style="margin:0">Mid-term stays are 90+ nights, so price by the month.</p>
+    <div class="calc">
+      <div class="field"><label for="rent">Monthly rate charged to guest ($)</label><input id="rent" type="number" min="0" value="3200"></div>
+      <div class="field"><label for="occ">Occupancy (%)</label><input id="occ" type="number" min="0" max="100" value="85"></div>
+      <div class="field"><label for="lease">Your lease or mortgage ($/month)</label><input id="lease" type="number" min="0" value="1700"></div>
+      <div class="field"><label for="costs">Utilities, cleaning, supplies ($/month)</label><input id="costs" type="number" min="0" value="450"></div>
+    </div>
+    <div class="row" style="flex-wrap:wrap"><div><span class="small">Revenue</span><div class="result" id="rRev"></div></div><div><span class="small">Costs</span><div class="result" id="rCost"></div></div><div><span class="small">Profit per month</span><div class="result" id="rProfit"></div></div></div>
+  </div>`;
+}
+
+function courses(){
+  return header("Courses","Short lessons, in order. Your progress is saved.")+`
+  <div class="grid">${COURSES.map(c=>{const ok=has(c.plan);const pct=Math.round(c.done/c.lessons.length*100);return `
+    <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${c.lessons.length} lessons</span>${ok?`<span class="small">${pct}% done</span>`:lockPill(c.plan)}</div>
+      <h3>${c.name}</h3>
+      ${ok?`<div class="bar"><span style="width:${pct}%"></span></div><ol class="lessons">${c.lessons.map((l,i)=>`<li class="${i<c.done?"done":""}">${l}</li>`).join("")}</ol>`:`<ol class="lessons small">${c.lessons.map(l=>`<li>${l}</li>`).join("")}</ol><button class="btn ghost" data-upgrade="${c.plan}">Upgrade to ${PLAN_NAME[c.plan]}</button>`}
+    </div>`}).join("")}</div>`;
+}
+
+function account(){
+  return header("Account","Your plan, payments and details.")+`
+  <div class="card"><h2>Your plan</h2>
+    <div class="plans">${PLANS.map(p=>`<div class="plan ${p.id===plan?"current":""}"><div class="row"><h3>${PLAN_NAME[p.id]}</h3>${p.id===plan?`<span class="pill">Current</span>`:""}</div>
+      <span class="small">${p.price}</span><ul>${p.items.map(i=>`<li>${i}</li>`).join("")}</ul>
+      ${p.id===plan?"":`<button class="btn ${RANK[p.id]>RANK[plan]?"":"ghost"}" data-switch="${p.id}">${RANK[p.id]>RANK[plan]?"Upgrade":"Switch"} to ${PLAN_NAME[p.id]}</button>`}</div>`).join("")}</div>
+  </div>
+  <div class="grid">
+    <div class="card"><h2>Payment</h2><p class="small" style="margin:0">Visa ending 4242 · next charge 1 December 2026</p>
+      <div class="row"><button class="btn ghost" data-portal="card">Update card</button><button class="btn danger" data-portal="cancel">Cancel plan</button></div></div>
+    <div class="card"><h2>Details</h2><p class="small" style="margin:0">member@example.com</p>
+      <div class="row"><button class="btn ghost" id="signout">Sign out</button></div></div>
+  </div>
+  <div class="card"><h2>Receipts</h2><table><thead><tr><th>Date</th><th>Plan</th><th>Status</th></tr></thead><tbody>
+    <tr><td>1 Nov 2026</td><td>${PLAN_NAME[plan]}</td><td style="color:var(--good)">Paid</td></tr>
+    <tr><td>1 Oct 2026</td><td>${PLAN_NAME[plan]}</td><td style="color:var(--good)">Paid</td></tr></tbody></table></div>
+  <div class="note">In the real app, "Update card" and "Cancel plan" open Stripe's secure billing page, and plan changes are charged there.</div>`;
+}
+
+function renderChecklist(id){
+  const t=TOOLS.find(x=>x.id===id); const box=$("#toolPanel");
+  if(id==="consumables"){box.innerHTML=`<div class="card"><h2>${t.name}</h2><p class="small" style="margin:0">Example quantities for Zebo to replace. Change the numbers and the list updates.</p>
+    <div class="calc"><div class="field"><label for="gN">Guests</label><input id="gN" type="number" min="1" value="2"></div><div class="field"><label for="bN">Bedrooms</label><input id="bN" type="number" min="1" value="1"></div><div class="field"><label for="baN">Bathrooms</label><input id="baN" type="number" min="1" value="1"></div></div>
+    <table><thead><tr><th>Item</th><th>Rule</th><th>Quantity</th></tr></thead><tbody id="consRows"></tbody></table></div>`;
+    const upd=()=>{const g=+$("#gN").value||1,b=+$("#bN").value||1,ba=+$("#baN").value||1;
+      const rows=[["Bath towels","2 per guest",2*g],["Hand towels","1 per bathroom, plus 1 spare",ba+1],["Bed linen sets","2 per bedroom",2*b],["Toilet paper rolls","4 per bathroom",4*ba],["Shampoo and shower gel","1 each per bathroom",ba],["Dish soap and sponges","1 set per kitchen",1],["Coffee and tea","Starter pack per stay",1],["Bin bags","1 roll per week, start with 2",2]];
+      $("#consRows").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="small">${r[1]}</td><td><strong>${r[2]}</strong></td></tr>`).join("");};
+    ["#gN","#bN","#baN"].forEach(i=>$(i).oninput=upd); upd(); box.scrollIntoView({behavior:"smooth"}); return;}
+  const items=CHECKS[id]||[]; done[id]=done[id]||{};
+  const n=Object.values(done[id]).filter(Boolean).length;
+  box.innerHTML=`<div class="card"><div class="row"><h2>${t.name}</h2><span class="pill">${n} of ${items.length} done</span></div>
+    <p class="small" style="margin:0">Example items. Zebo writes the real ones; progress is saved per apartment.</p>
+    <div style="display:grid;gap:6px">${items.map((it,i)=>`<label style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" data-i="${i}" ${done[id][i]?"checked":""} style="margin-top:4px;accent-color:var(--teal)"> <span>${it}</span></label>`).join("")}</div></div>`;
+  box.querySelectorAll("input[type=checkbox]").forEach(c=>c.onchange=()=>{done[id][c.dataset.i]=c.checked;renderChecklist(id);});
+  box.scrollIntoView({behavior:"smooth"});
+}
+function money(n){return "$"+Math.round(n).toLocaleString("en-US")}
+function calc(){
+  const v=id=>parseFloat($(id)?.value)||0; if(!$("#rent")) return;
+  const rev=v("#rent")*v("#occ")/100, cost=v("#lease")+v("#costs");
+  $("#rRev").textContent=money(rev); $("#rCost").textContent=money(cost);
+  const p=$("#rProfit"); p.textContent=money(rev-cost); p.style.color=rev-cost>=0?"var(--good)":"#B4443A";
+}
+function openDialog(title,text,onOk,okLabel){
+  $("#dlgTitle").textContent=title; $("#dlgText").textContent=text;
+  const ok=$("#dlgOk"); ok.hidden=!onOk; ok.textContent=okLabel||"Confirm";
+  ok.onclick=()=>{closeDialog(); onOk&&onOk();};
+  $("#dlg").classList.add("open"); (onOk?ok:$("#dlgCancel")).focus();
+}
+function closeDialog(){$("#dlg").classList.remove("open")}
+$("#dlgCancel").onclick=closeDialog;
+document.addEventListener("keydown",e=>{if(e.key==="Escape") closeDialog()});
+
+function setPlan(p){plan=p; $("#demoPlan").value=p; render();}
+function bind(){
+  document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+  document.querySelectorAll("[data-upgrade],[data-switch]").forEach(b=>b.onclick=()=>{
+    const p=b.dataset.upgrade||b.dataset.switch;
+    openDialog(`Move to ${PLAN_NAME[p]}?`,`In the real app this opens checkout and you pay the difference. In this prototype it just unlocks the ${PLAN_NAME[p]} content.`,()=>setPlan(p),`Move to ${PLAN_NAME[p]}`);
+  });
+  document.querySelectorAll("[data-portal]").forEach(b=>b.onclick=()=>openDialog(b.dataset.portal==="cancel"?"Cancel your plan":"Update your card","In the real app this opens Stripe's secure billing page. Access stays until the end of the paid month."));
+  document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{
+    if(b.dataset.tool==="calc"){$("#calcCard").scrollIntoView({behavior:"smooth"});$("#rent").focus();}
+    else if(CHECKS[b.dataset.tool]||b.dataset.tool==="consumables") renderChecklist(b.dataset.tool);
+    else openDialog(TOOLS.find(t=>t.id===b.dataset.tool).name,"In the real app this opens the tool, saved to the member's own account.");
+  });
+  ["#rent","#occ","#lease","#costs"].forEach(id=>{const el=$(id); if(el) el.oninput=calc;});
+  calc();
+  const so=$("#signout"); if(so) so.onclick=()=>{signedIn=false; render();};
+}
+function go(v){view=v; try{localStorage.setItem("f2sView",v)}catch(e){} render(); window.scrollTo(0,0);}
+document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>go(b.dataset.view));
+$("#loginForm").addEventListener("submit",e=>{e.preventDefault(); signedIn=true; render();});
+$("#demoPlan").onchange=e=>setPlan(e.target.value);
+// Opens signed in so the dashboard shows at once; Sign out shows the login screen.
+signedIn=true; render();
+</script>
+</body>
+</html>
