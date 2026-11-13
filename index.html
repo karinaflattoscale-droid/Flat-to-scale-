@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flat 2 Scale Members App</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#17283F">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Flat 2 Scale">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -52,6 +60,26 @@ button{cursor:pointer}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .btn.danger{background:transparent;color:#B4443A;border:1px solid var(--line)}
 .small{font-size:.88rem;color:var(--muted)}
+.linkbtn{background:none;border:0;padding:0;color:var(--teal);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.85rem}.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.demo-bar .installbtn{background:#fff;color:var(--navy);border:0;border-radius:6px;padding:3px 10px;font-weight:600;font-size:.88rem}
+/* Sign-up: shown as a website page, not inside the app */
+.site{min-height:calc(100% - 40px);display:grid;align-content:start;justify-items:center;padding:0 16px 32px}
+.sitebar{width:100%;max-width:640px;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 0}
+.url{font-size:.82rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 12px;background:var(--surface)}
+.signup-card{max-width:640px}
+.steps{display:flex;gap:6px;flex-wrap:wrap;font-size:.85rem;margin:0;padding:0;list-style:none}
+.steps li{padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.steps li.on{background:var(--teal-soft);border-color:var(--teal);color:var(--ink);font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.planpick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:560px){.two,.planpick{grid-template-columns:1fr}}
+.planpick label{position:relative;border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:4px;cursor:pointer;background:var(--bg)}
+.planpick input{position:absolute;opacity:0;pointer-events:none}
+.planpick label:has(input:checked){border:2px solid var(--teal);background:var(--teal-soft)}
+.planpick label:has(input:focus-visible){outline:3px solid var(--teal);outline-offset:2px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem}
+.check input{margin-top:4px;accent-color:var(--teal)}
 /* Shell */
 .shell{display:grid;grid-template-columns:230px 1fr;min-height:calc(100% - 40px)}
 nav.side{background:var(--navy);color:#fff;padding:20px 14px;display:flex;flex-direction:column;gap:6px}
@@ -97,9 +125,15 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
 <body>
 <div class="demo-bar">
   <span><strong>Prototype.</strong> No real accounts or payments. Tools, courses and plan contents are examples for Zebo to replace.</span>
+  <span style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center">
+  <label for="demoScreen">Show
+    <select id="demoScreen"><option value="app">App (signed in)</option><option value="login">Sign-in screen</option><option value="signup">Create account (website)</option></select>
+  </label>
   <label for="demoPlan">Preview as
     <select id="demoPlan"><option value="basic">Basic</option><option value="premium" selected>Premium</option><option value="full">Full</option></select>
   </label>
+  <button class="installbtn" id="installBtn" type="button">&#8681; Install app</button>
+  </span>
 </div>
 
 <section class="login" id="login" hidden>
@@ -109,7 +143,32 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
     <div class="field"><label for="email">Email</label><input id="email" type="email" value="member@example.com" required></div>
     <div class="field"><label for="pw">Password</label><input id="pw" type="password" value="demo-password" required></div>
     <button class="btn" type="submit">Sign in</button>
-    <p class="small">New here? Plans are bought on the Flat 2 Scale website, then you sign in here with the same email.</p>
+    <button class="linkbtn" type="button" id="forgot" style="justify-self:start">Forgot password?</button>
+    <div class="or">New to Flat 2 Scale?</div>
+    <button class="btn ghost" type="button" id="toSignup">Create an account</button>
+    <p class="small" style="margin:0">You create your account and choose your plan on the Flat 2 Scale website. Then you sign in here with the same email.</p>
+  </form>
+</section>
+
+<section class="site" id="signup" hidden>
+  <div class="sitebar"><div class="brand"><span class="mark">F2S</span>Flat 2 Scale</div><span class="url" title="Example web address">flat2scale.com/join</span></div>
+  <form class="login-card signup-card" id="signupForm">
+    <ol class="steps" aria-label="Steps"><li class="on">1. Your details</li><li class="on">2. Choose a plan</li><li>3. Secure payment</li></ol>
+    <h1>Create your Flat 2 Scale account</h1>
+    <p class="small" style="margin:0">This page is on the website. You pay here once, then use the app with the same email and password.</p>
+    <div class="two">
+      <div class="field"><label for="suFirst">First name</label><input id="suFirst" autocomplete="given-name" required></div>
+      <div class="field"><label for="suLast">Last name</label><input id="suLast" autocomplete="family-name" required></div>
+    </div>
+    <div class="field"><label for="suEmail">Email</label><input id="suEmail" type="email" autocomplete="email" required></div>
+    <div class="field"><label for="suPw">Password</label><input id="suPw" type="password" minlength="8" autocomplete="new-password" required aria-describedby="pwHint"><span class="small" id="pwHint">At least 8 characters.</span></div>
+    <fieldset style="border:0;padding:0;margin:0;display:grid;gap:8px"><legend style="font-weight:600;font-size:.92rem;margin-bottom:6px">Choose your plan</legend>
+      <div class="planpick" id="planPick"></div>
+      <span class="small">Prices and plan contents are set by Zebo. You can change plan later.</span>
+    </fieldset>
+    <label class="check"><input type="checkbox" required> <span>I agree to the terms and privacy policy.</span></label>
+    <button class="btn" type="submit">Continue to secure payment</button>
+    <p class="small" style="margin:0">Already have an account? <button class="linkbtn" type="button" id="toLogin">Sign in</button></p>
   </form>
 </section>
 
@@ -139,11 +198,11 @@ const PLANS=[
   {id:"full",price:"Price set by Zebo",items:["Everything in Premium","Course 3: Scaling to 5+ units","Quarterly business review with Zebo"]}
 ];
 const TOOLS=[
-  {id:"onboard",name:"Onboarding and listing checklist",desc:"What to have ready, what to highlight in your ad, photo orientation and shot list.",plan:"basic",type:"Checklist"},
+  {id:"onboard",name:"Property onboarding and listing checklist",desc:"Size, exposure, trash, parking, amenities and photos, all in one place. Writes your listing draft from your answers.",plan:"basic",type:"Checklist",live:true,src:"tools/onboarding.html"},
   {id:"setupclean",name:"Setup cleaning checklist",desc:"The deep clean before your first guest, room by room.",plan:"basic",type:"Checklist"},
   {id:"regclean",name:"Regular cleaning checklist",desc:"The turnover clean between stays.",plan:"basic",type:"Checklist"},
   {id:"calc",name:"Rental profit calculator",desc:"Monthly revenue, costs and profit for one unit.",plan:"basic",type:"Calculator"},
-  {id:"furnish",name:"Furnishing checklist",desc:"Adapts to your guest type, budget and style.",plan:"premium",type:"Checklist"},
+  {id:"furnish",name:"Furnishing and inventory checklist",desc:"Room by room, with quantities for your bedrooms, beds and guests. Count what you have and see what is still to get.",plan:"premium",type:"Checklist",live:true,src:"tools/furnishing.html"},
   {id:"mood",name:"Moodboard generator",desc:"Answer a few questions and get a sample moodboard for each room.",plan:"premium",type:"Tool"},
   {id:"utilities",name:"Utilities and WiFi setup",desc:"Setup steps, provider options and useful contacts for your city.",plan:"premium",type:"Checklist"},
   {id:"consumables",name:"Final touches and consumables",desc:"What to stock, with quantities worked out for your guests and rooms.",plan:"premium",type:"Checklist"},
@@ -155,7 +214,6 @@ const CHECKS={
   onboard:["Lease or ownership papers ready","House rules written","Wi-Fi name and password ready","Listing title names the area and the stay length","Highlight: workspace, washer, parking, transit","Photos in landscape orientation, daylight, lights on","Shot list: living room, each bedroom, kitchen, bathroom, workspace, view"],
   setupclean:["Dust top to bottom: lights, shelves, frames","Inside cupboards, drawers and appliances","Kitchen: oven, fridge, extractor","Bathroom: descale shower, taps, grout","Windows and sills","Floors last: vacuum, then mop"],
   regclean:["Strip beds, fresh linen","Towels replaced","Kitchen and bathroom wiped and disinfected","Rubbish out, bins relined","Restock consumables","Check for damage and lost items, take photos"],
-  furnish:["Bed and mattress protector per bedroom","Blackout curtains","Desk and good chair (90+ night guests work from home)","Full kitchen set","Iron, hairdryer, drying rack","Storage: wardrobe space, hangers"],
   mood:["Style chosen: calm neutral, warm modern or bright coastal","Budget per room set","Sample board generated for living room","Sample board generated for bedroom"],
   utilities:["Electricity account in your name","Gas or heating set up","Water account","Internet: order at least 4 weeks before move-in","Router placed centrally, password set","Provider contacts saved for your city"],
   refresh:["Change linen and towels","Bathroom and kitchen deep wipe","Check consumables and restock","Check for maintenance issues","Short note to the guest"]
@@ -166,7 +224,7 @@ const COURSES=[
   {name:"Mid-term rentals (90+ nights)",plan:"premium",lessons:["Who books 90+ nights","Pricing by the month","Leases and deposits","Finding corporate and medical guests"],done:1},
   {name:"Scaling to 5+ units",plan:"full",lessons:["When to add the next unit","Hiring cleaners and a co-host","Systems and automation","Financing growth"],done:0}
 ];
-let plan="premium", view="home", signedIn=false;
+let plan="premium", view="home", screen="app";
 const $=s=>document.querySelector(s);
 const has=p=>RANK[plan]>=RANK[p];
 try{const v=localStorage.getItem("f2sView"); if(v) view=v;}catch(e){}
@@ -174,8 +232,10 @@ try{const v=localStorage.getItem("f2sView"); if(v) view=v;}catch(e){}
 function lockPill(p){return `<span class="pill lock" aria-label="Locked">&#128274; ${PLAN_NAME[p]} plan</span>`}
 
 function render(){
-  $("#login").hidden=signedIn; $("#app").hidden=!signedIn;
-  if(!signedIn) return;
+  $("#login").hidden=screen!=="login"; $("#signup").hidden=screen!=="signup"; $("#app").hidden=screen!=="app";
+  $("#demoScreen").value=screen;
+  if(screen==="signup") renderPlanPick();
+  if(screen!=="app") return;
   document.querySelectorAll(".navbtn").forEach(b=>b.setAttribute("aria-current",b.dataset.view===view?"page":"false"));
   $("#main").innerHTML=({home,tools,courses,account})[view]();
   bind();
@@ -205,7 +265,7 @@ function tools(){
   return header("Tools","Checklists, calculators, trackers and tools for your rentals.")+`
   <div class="grid">${TOOLS.map(t=>{const ok=has(t.plan);return `
     <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${t.type}</span>${ok?"":lockPill(t.plan)}</div>
-      <h3>${t.name}</h3><p class="small" style="margin:0">${t.desc}</p>
+      <h3>${t.name}${t.live?` <span class="pill" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Working draft</span>`:""}</h3><p class="small" style="margin:0">${t.desc}</p>
       <div class="row"><span></span>${ok?`<button class="btn ${t.id==="calc"?"":"ghost"}" data-tool="${t.id}">Open</button>`:`<button class="btn ghost" data-upgrade="${t.plan}">Upgrade to ${PLAN_NAME[t.plan]}</button>`}</div></div>`}).join("")}</div>
   <div id="toolPanel"></div>
   <div class="card" id="calcCard"><h2>Rental profit calculator</h2>
@@ -250,6 +310,8 @@ function account(){
 
 function renderChecklist(id){
   const t=TOOLS.find(x=>x.id===id); const box=$("#toolPanel");
+  if(t.live){box.innerHTML=`<div class="card" style="padding:0;overflow:hidden"><iframe id="liveTool" src="${t.src}" title="${t.name}" style="width:100%;height:900px;border:0;display:block"></iframe></div>`;
+    box.scrollIntoView({behavior:"smooth"}); return;}
   if(id==="consumables"){box.innerHTML=`<div class="card"><h2>${t.name}</h2><p class="small" style="margin:0">Example quantities for Zebo to replace. Change the numbers and the list updates.</p>
     <div class="calc"><div class="field"><label for="gN">Guests</label><input id="gN" type="number" min="1" value="2"></div><div class="field"><label for="bN">Bedrooms</label><input id="bN" type="number" min="1" value="1"></div><div class="field"><label for="baN">Bathrooms</label><input id="baN" type="number" min="1" value="1"></div></div>
     <table><thead><tr><th>Item</th><th>Rule</th><th>Quantity</th></tr></thead><tbody id="consRows"></tbody></table></div>`;
@@ -292,19 +354,51 @@ function bind(){
   document.querySelectorAll("[data-portal]").forEach(b=>b.onclick=()=>openDialog(b.dataset.portal==="cancel"?"Cancel your plan":"Update your card","In the real app this opens Stripe's secure billing page. Access stays until the end of the paid month."));
   document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{
     if(b.dataset.tool==="calc"){$("#calcCard").scrollIntoView({behavior:"smooth"});$("#rent").focus();}
-    else if(CHECKS[b.dataset.tool]||b.dataset.tool==="consumables") renderChecklist(b.dataset.tool);
+    else if(CHECKS[b.dataset.tool]||b.dataset.tool==="consumables"||TOOLS.find(t=>t.id===b.dataset.tool).live) renderChecklist(b.dataset.tool);
     else openDialog(TOOLS.find(t=>t.id===b.dataset.tool).name,"In the real app this opens the tool, saved to the member's own account.");
   });
   ["#rent","#occ","#lease","#costs"].forEach(id=>{const el=$(id); if(el) el.oninput=calc;});
   calc();
-  const so=$("#signout"); if(so) so.onclick=()=>{signedIn=false; render();};
+  const so=$("#signout"); if(so) so.onclick=()=>show("login");
 }
+window.addEventListener("message",e=>{const f=$("#liveTool");if(f&&e.source===f.contentWindow&&e.data&&e.data.f2sHeight)f.style.height=Math.max(400,e.data.f2sHeight)+"px";});
 function go(v){view=v; try{localStorage.setItem("f2sView",v)}catch(e){} render(); window.scrollTo(0,0);}
 document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>go(b.dataset.view));
-$("#loginForm").addEventListener("submit",e=>{e.preventDefault(); signedIn=true; render();});
+function show(s){screen=s; render(); window.scrollTo(0,0);}
+let pick="premium";
+function renderPlanPick(){
+  $("#planPick").innerHTML=PLANS.map(p=>`<label><input type="radio" name="suPlan" value="${p.id}" ${p.id===pick?"checked":""}><strong>${PLAN_NAME[p.id]}</strong><span class="small">${p.price}</span><span class="small">${p.items[p.id==="basic"?0:1]}</span></label>`).join("");
+  document.querySelectorAll("input[name=suPlan]").forEach(r=>r.onchange=()=>{pick=r.value;});
+}
+$("#loginForm").addEventListener("submit",e=>{e.preventDefault(); show("app");});
+$("#toSignup").onclick=()=>show("signup");
+$("#toLogin").onclick=()=>show("login");
+$("#forgot").onclick=()=>openDialog("Reset your password","In the real app we email you a link to set a new password.");
+$("#signupForm").addEventListener("submit",e=>{e.preventDefault();
+  const em=$("#suEmail").value;
+  openDialog("Secure payment",`On the real website this opens Stripe's secure checkout for the ${PLAN_NAME[pick]} plan. After payment your account is ready, and you sign in to the app with ${em}. In this prototype nothing is charged.`,()=>{$("#email").value=em; plan=pick; $("#demoPlan").value=pick; show("login");},"Pay (demo) and go to the app");
+});
 $("#demoPlan").onchange=e=>setPlan(e.target.value);
-// Opens signed in so the dashboard shows at once; Sign out shows the login screen.
-signedIn=true; render();
+$("#demoScreen").onchange=e=>show(e.target.value);
+
+// Install as an app (desktop or phone home screen)
+let installEvt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault(); installEvt=e;});
+const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+if(standalone) $("#installBtn").hidden=true;
+$("#installBtn").onclick=async()=>{
+  if(installEvt){installEvt.prompt(); await installEvt.userChoice; installEvt=null; return;}
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  openDialog("Install the Flat 2 Scale app", ios
+    ? "On iPhone or iPad: open this page in Safari, tap the Share button, then 'Add to Home Screen'."
+    : "On a computer (Chrome or Edge): click the install icon at the right end of the address bar, or the menu, then 'Install Flat 2 Scale'. On Android (Chrome): menu, then 'Add to Home screen'. This works from the website address, not inside a preview window.");
+};
+// Offline helper: only on the real website (GitHub Pages), never in a preview.
+if("serviceWorker" in navigator && location.hostname.endsWith("github.io")){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+// Opens signed in so the dashboard shows at once. Use "Show" in the top bar for the sign-in and create-account screens.
+screen="app"; render();
 </script>
 </body>
 </html>

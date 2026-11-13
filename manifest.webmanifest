@@ -1,0 +1,16 @@
+{
+  "name": "Flat 2 Scale",
+  "short_name": "Flat 2 Scale",
+  "description": "Flat 2 Scale members toolkit: checklists, tools and courses for furnished rentals.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F4F6F8",
+  "theme_color": "#17283F",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
