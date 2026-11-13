@@ -238,31 +238,25 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
 const RANK={basic:1,premium:2,full:3};
 const PLAN_NAME={basic:"Basic",premium:"Premium",full:"Full"};
 const PLANS=[
-  {id:"basic",price:"Price set by Zebo",items:["Starter checklists: onboarding, setup and regular cleaning","Course 1: Launch your first furnished rental","Monthly member email"]},
-  {id:"premium",price:"Price set by Zebo",items:["Everything in Basic","Furnishing, moodboard, utilities, consumables and refresh cleaning","Course 2: Mid-term rentals (90+ nights)"]},
-  {id:"full",price:"Price set by Zebo",items:["Everything in Premium","Course 3: Scaling to 5+ units","Quarterly business review with Zebo"]}
+  {id:"basic",price:"Price set by Zebo",items:["Onboarding and listing checklist, cleaning instructions and move-in inspection report","Course 1: Launch your first furnished rental","Monthly member email"]},
+  {id:"premium",price:"Price set by Zebo",items:["Everything in Basic","Furnishing, utilities and WiFi, final touches, moodboard generator and calculators","Course 2: Mid-term rentals (90+ nights)"]},
+  {id:"full",price:"Price set by Zebo",items:["Everything in Premium","Digital welcome book builder","Course 3: Scaling to 5+ units","Quarterly business review with Zebo"]}
 ];
+// Zebo's toolkit list (Nov 10): 5 checklists and 6 tools. Plan per item is a guess for Zebo to confirm.
 const TOOLS=[
   {id:"onboard",name:"Property onboarding and listing checklist",desc:"Size, exposure, trash, parking, amenities and photos, all in one place. Writes your listing draft from your answers.",plan:"basic",type:"Checklist",live:true,src:"tools/onboarding.html"},
-  {id:"setupclean",name:"Setup cleaning checklist",desc:"The deep clean before your first guest, room by room.",plan:"basic",type:"Checklist"},
-  {id:"regclean",name:"Regular cleaning checklist",desc:"The turnover clean between stays.",plan:"basic",type:"Checklist"},
-  {id:"calc",name:"Rental profit calculator",desc:"Monthly revenue, costs and profit for one unit.",plan:"basic",type:"Calculator"},
   {id:"furnish",name:"Furnishing and inventory checklist",desc:"Room by room, with quantities for your bedrooms, beds and guests. Count what you have and see what is still to get.",plan:"premium",type:"Checklist",live:true,src:"tools/furnishing.html"},
-  {id:"mood",name:"Moodboard generator",desc:"Answer a few questions and get a sample moodboard for each room.",plan:"premium",type:"Tool"},
-  {id:"utilities",name:"Utilities and WiFi setup",desc:"Setup steps, provider options and useful contacts for your city.",plan:"premium",type:"Checklist"},
-  {id:"consumables",name:"Final touches and consumables",desc:"What to stock, with quantities worked out for your guests and rooms.",plan:"premium",type:"Checklist"},
-  {id:"refresh",name:"Refresh cleaning checklist",desc:"Mid-stay clean for 90+ night guests.",plan:"premium",type:"Checklist"},
-  {id:"occ",name:"Occupancy and revenue tracker",desc:"Track nights booked and income per month.",plan:"premium",type:"Tracker"},
-  {id:"portfolio",name:"Portfolio dashboard",desc:"All units side by side: revenue, costs, margin.",plan:"full",type:"Tracker"}
+  {id:"utilities",name:"Utilities and WiFi setup",desc:"Setup steps, provider options and useful contacts for your city.",plan:"premium",type:"Checklist",soon:"20 Nov"},
+  {id:"consumables",name:"Final touches and consumables",desc:"What to stock, with quantities worked out for your guests and rooms.",plan:"premium",type:"Checklist",soon:"20 Nov"},
+  {id:"cleaning",name:"Cleaning instructions",desc:"How to clean the apartment before the first guest, between stays and during long stays.",plan:"basic",type:"Checklist",soon:"27 Nov"},
+  {id:"inspection",name:"Move-in inspection report",desc:"Room-by-room condition report with photos, signed at move-in.",plan:"basic",type:"Tool",soon:"27 Nov"},
+  {id:"calc",name:"Rental profit calculator",desc:"Monthly revenue, costs and profit for one unit.",plan:"premium",type:"Calculator"},
+  {id:"startup",name:"Startup cost and payback calculator",desc:"What it costs to set up a unit and how many months until it pays back.",plan:"premium",type:"Calculator",soon:"11 Dec"},
+  {id:"scorecard",name:"Market and unit scorecard",desc:"Score a city and an apartment before you commit.",plan:"premium",type:"Tool",soon:"18 Dec"},
+  {id:"welcome",name:"Digital welcome book builder",desc:"Build a guest welcome book for your apartment and share it with a link.",plan:"full",type:"Tool",soon:"23 Dec"},
+  {id:"mood",name:"Moodboard generator",desc:"Answer a few questions and get a sample moodboard for each room.",plan:"premium",type:"Tool",soon:"23 Dec"}
 ];
-const CHECKS={
-  onboard:["Lease or ownership papers ready","House rules written","Wi-Fi name and password ready","Listing title names the area and the stay length","Highlight: workspace, washer, parking, transit","Photos in landscape orientation, daylight, lights on","Shot list: living room, each bedroom, kitchen, bathroom, workspace, view"],
-  setupclean:["Dust top to bottom: lights, shelves, frames","Inside cupboards, drawers and appliances","Kitchen: oven, fridge, extractor","Bathroom: descale shower, taps, grout","Windows and sills","Floors last: vacuum, then mop"],
-  regclean:["Strip beds, fresh linen","Towels replaced","Kitchen and bathroom wiped and disinfected","Rubbish out, bins relined","Restock consumables","Check for damage and lost items, take photos"],
-  mood:["Style chosen: calm neutral, warm modern or bright coastal","Budget per room set","Sample board generated for living room","Sample board generated for bedroom"],
-  utilities:["Electricity account in your name","Gas or heating set up","Water account","Internet: order at least 4 weeks before move-in","Router placed centrally, password set","Provider contacts saved for your city"],
-  refresh:["Change linen and towels","Bathroom and kitchen deep wipe","Check consumables and restock","Check for maintenance issues","Short note to the guest"]
-};
+const CHECKS={};
 let done={};
 const COURSES=[
   {name:"Launch your first furnished rental",plan:"basic",lessons:["Is this market right for you?","Finding the apartment","Furnishing on a budget","Listing and pricing","Your first guest"],done:3},
@@ -312,7 +306,7 @@ function tools(){
   return header("Tools","Checklists, calculators, trackers and tools for your rentals.")+`
   <div class="grid">${TOOLS.map(t=>{const ok=has(t.plan);return `
     <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${t.type}</span>${ok?"":lockPill(t.plan)}</div>
-      <h3>${t.name}${t.live?` <span class="pill" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Working draft</span>`:""}</h3><p class="small" style="margin:0">${t.desc}</p>
+      <h3>${t.name}${t.live?` <span class="pill" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Working draft</span>`:t.soon?` <span class="pill lock" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Coming ${t.soon}</span>`:""}</h3><p class="small" style="margin:0">${t.desc}</p>
       <div class="row"><span></span>${ok?`<button class="btn ${t.id==="calc"?"":"ghost"}" data-tool="${t.id}">Open</button>`:`<button class="btn ghost" data-upgrade="${t.plan}">Upgrade to ${PLAN_NAME[t.plan]}</button>`}</div></div>`}).join("")}</div>
   <div id="toolPanel"></div>
   <div class="card" id="calcCard"><h2>Rental profit calculator</h2>
@@ -413,7 +407,8 @@ function bind(){
   document.querySelectorAll("[data-portal]").forEach(b=>b.onclick=()=>openDialog(b.dataset.portal==="cancel"?"Cancel your plan":"Update your card","In the real app this opens Stripe's secure billing page. Access stays until the end of the paid month."));
   document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{
     if(b.dataset.tool==="calc"){$("#calcCard").scrollIntoView({behavior:"smooth"});$("#rent").focus();}
-    else if(CHECKS[b.dataset.tool]||b.dataset.tool==="consumables"||TOOLS.find(t=>t.id===b.dataset.tool).live) renderChecklist(b.dataset.tool);
+    else if(b.dataset.tool==="consumables"||TOOLS.find(t=>t.id===b.dataset.tool).live) renderChecklist(b.dataset.tool);
+    else if(TOOLS.find(t=>t.id===b.dataset.tool).soon){const t=TOOLS.find(t=>t.id===b.dataset.tool); openDialog(t.name,`Being built now. Ready for Zebo's review by ${t.soon}.`);}
     else openDialog(TOOLS.find(t=>t.id===b.dataset.tool).name,"In the real app this opens the tool, saved to the member's own account.");
   });
   ["#rent","#occ","#lease","#costs"].forEach(id=>{const el=$(id); if(el) el.oninput=calc;});
