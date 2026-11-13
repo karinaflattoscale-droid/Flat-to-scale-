@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Flat 2 Scale Members App</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#17283F">
@@ -119,11 +119,55 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
   .navbtn{flex-direction:column;gap:2px;font-size:.75rem;padding:6px 8px}
   main{padding:20px 16px}
 }
+.appbar,.demo-toggle,.sheetbar{display:none}
+/* Phone app layout */
+@media (max-width:760px){
+  html{-webkit-tap-highlight-color:transparent}
+  body{overscroll-behavior-y:none}
+  .demo-bar{padding:6px 12px;font-size:.82rem}
+  .demo-toggle{display:flex;width:100%;justify-content:space-between;align-items:center;background:none;border:0;color:#fff;font-weight:600;padding:2px 0}
+  .demo-bar:not(.open) > span{display:none !important}
+  .demo-bar.open > span{display:flex}
+  .appbar{display:flex;position:sticky;top:0;z-index:6;align-items:center;justify-content:space-between;gap:10px;background:var(--navy);color:#fff;padding:10px 16px;padding-top:max(10px,env(safe-area-inset-top))}
+  .appbar .brand{font-size:1.05rem}
+  .appbar .mark{width:30px;height:30px}
+  .appbar .pill{background:rgba(255,255,255,.14);color:#fff}
+  .top .pill{display:none}
+  h1{font-size:1.4rem}
+  main{padding:18px 14px 24px;gap:16px}
+  .grid{grid-template-columns:1fr;gap:10px}
+  .card{padding:14px 16px;border-radius:14px;gap:8px}
+  .card p.small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .btn{min-height:44px}
+  .shell{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  nav.side{background:var(--surface);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom))}
+  .navbtn{color:var(--muted);flex:1;align-items:center;border-radius:10px}
+  .navbtn[aria-current="page"]{background:transparent;color:var(--teal)}
+  .navbtn svg{width:22px;height:22px}
+  /* Tools open full screen, like a phone app page */
+  #toolPanel.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 calc(16px + env(safe-area-inset-bottom))}
+  #toolPanel.sheet > .card{border:0;border-radius:0;margin:0}
+  #toolPanel.sheet .sheetbar{display:flex;position:sticky;top:0;z-index:2;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top))}
+  .sheetbar button{background:none;border:0;color:#fff;font-weight:600;font-size:1rem;padding:6px 8px;min-height:40px}
+  .sheetbar span{font-family:var(--display);font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.sheet-open{overflow:hidden}
+  /* Sign-in and sign-up fill the screen */
+  .login{place-items:start stretch;padding:0}
+  .login-card{max-width:none;min-height:calc(100vh - 34px);border:0;border-radius:0;padding:32px 20px calc(24px + env(safe-area-inset-bottom));align-content:start}
+  .login-card h1{font-size:1.6rem}
+  .site{padding:0}
+  .sitebar{padding:12px 16px}
+  /* Pop-ups slide up from the bottom */
+  .dialog{place-items:end stretch;padding:0}
+  .dialog .card{max-width:none;border-radius:18px 18px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom))}
+}
+@media (max-width:760px) and (display-mode: standalone){.demo-bar{display:none}}
 @media (prefers-reduced-motion:no-preference){.bar span{transition:width .4s}}
 </style>
 </head>
 <body>
-<div class="demo-bar">
+<div class="demo-bar" id="demoBar">
+  <button class="demo-toggle" id="demoToggle" type="button" aria-expanded="false" aria-controls="demoBar">Prototype · demo options <span aria-hidden="true">&#9662;</span></button>
   <span><strong>Prototype.</strong> No real accounts or payments. Tools, courses and plan contents are examples for Zebo to replace.</span>
   <span style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center">
   <label for="demoScreen">Show
@@ -180,6 +224,7 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
     <button class="navbtn" data-view="courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l10-4 10 4-10 4z"/><path d="M6 9v6c3 2 9 2 12 0V9"/></svg>Courses</button>
     <button class="navbtn" data-view="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg>Account</button>
   </nav>
+  <header class="appbar"><div class="brand"><span class="mark">F2S</span>Flat 2 Scale</div><span class="pill" id="appbarPlan"></span></header>
   <main id="main"></main>
 </div>
 
@@ -237,6 +282,8 @@ function render(){
   if(screen==="signup") renderPlanPick();
   if(screen!=="app") return;
   document.querySelectorAll(".navbtn").forEach(b=>b.setAttribute("aria-current",b.dataset.view===view?"page":"false"));
+  $("#appbarPlan").textContent=PLAN_NAME[plan]+" plan";
+  closeSheet();
   $("#main").innerHTML=({home,tools,courses,account})[view]();
   bind();
 }
@@ -308,25 +355,37 @@ function account(){
   <div class="note">In the real app, "Update card" and "Cancel plan" open Stripe's secure billing page, and plan changes are charged there.</div>`;
 }
 
-function renderChecklist(id){
+function renderChecklistInner(id){
   const t=TOOLS.find(x=>x.id===id); const box=$("#toolPanel");
   if(t.live){box.innerHTML=`<div class="card" style="padding:0;overflow:hidden"><iframe id="liveTool" src="${t.src}" title="${t.name}" style="width:100%;height:900px;border:0;display:block"></iframe></div>`;
-    box.scrollIntoView({behavior:"smooth"}); return;}
+    reveal(box); return;}
   if(id==="consumables"){box.innerHTML=`<div class="card"><h2>${t.name}</h2><p class="small" style="margin:0">Example quantities for Zebo to replace. Change the numbers and the list updates.</p>
     <div class="calc"><div class="field"><label for="gN">Guests</label><input id="gN" type="number" min="1" value="2"></div><div class="field"><label for="bN">Bedrooms</label><input id="bN" type="number" min="1" value="1"></div><div class="field"><label for="baN">Bathrooms</label><input id="baN" type="number" min="1" value="1"></div></div>
     <table><thead><tr><th>Item</th><th>Rule</th><th>Quantity</th></tr></thead><tbody id="consRows"></tbody></table></div>`;
     const upd=()=>{const g=+$("#gN").value||1,b=+$("#bN").value||1,ba=+$("#baN").value||1;
       const rows=[["Bath towels","2 per guest",2*g],["Hand towels","1 per bathroom, plus 1 spare",ba+1],["Bed linen sets","2 per bedroom",2*b],["Toilet paper rolls","4 per bathroom",4*ba],["Shampoo and shower gel","1 each per bathroom",ba],["Dish soap and sponges","1 set per kitchen",1],["Coffee and tea","Starter pack per stay",1],["Bin bags","1 roll per week, start with 2",2]];
       $("#consRows").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="small">${r[1]}</td><td><strong>${r[2]}</strong></td></tr>`).join("");};
-    ["#gN","#bN","#baN"].forEach(i=>$(i).oninput=upd); upd(); box.scrollIntoView({behavior:"smooth"}); return;}
+    ["#gN","#bN","#baN"].forEach(i=>$(i).oninput=upd); upd(); reveal(box); return;}
   const items=CHECKS[id]||[]; done[id]=done[id]||{};
   const n=Object.values(done[id]).filter(Boolean).length;
   box.innerHTML=`<div class="card"><div class="row"><h2>${t.name}</h2><span class="pill">${n} of ${items.length} done</span></div>
     <p class="small" style="margin:0">Example items. Zebo writes the real ones; progress is saved per apartment.</p>
     <div style="display:grid;gap:6px">${items.map((it,i)=>`<label style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" data-i="${i}" ${done[id][i]?"checked":""} style="margin-top:4px;accent-color:var(--teal)"> <span>${it}</span></label>`).join("")}</div></div>`;
   box.querySelectorAll("input[type=checkbox]").forEach(c=>c.onchange=()=>{done[id][c.dataset.i]=c.checked;renderChecklist(id);});
-  box.scrollIntoView({behavior:"smooth"});
+  reveal(box);
 }
+const isPhone=()=>matchMedia("(max-width:760px)").matches;
+function reveal(el){if(!isPhone()) el.scrollIntoView({behavior:"smooth"});}
+function renderChecklist(id){
+  renderChecklistInner(id);
+  const box=$("#toolPanel"); if(!isPhone()||!box) return;
+  const t=TOOLS.find(x=>x.id===id);
+  box.insertAdjacentHTML("afterbegin",`<div class="sheetbar"><button type="button" id="sheetBack" aria-label="Back to tools">&#8249; Tools</button><span>${t.name}</span></div>`);
+  if(!box.classList.contains("sheet")){box.classList.add("sheet"); box.scrollTop=0; document.body.classList.add("sheet-open"); history.pushState({f2sSheet:1},"");}
+  $("#sheetBack").onclick=()=>history.back();
+}
+function closeSheet(){const box=$("#toolPanel"); document.body.classList.remove("sheet-open"); if(box&&box.classList.contains("sheet")){box.classList.remove("sheet"); box.innerHTML="";}}
+window.addEventListener("popstate",closeSheet);
 function money(n){return "$"+Math.round(n).toLocaleString("en-US")}
 function calc(){
   const v=id=>parseFloat($(id)?.value)||0; if(!$("#rent")) return;
@@ -380,6 +439,7 @@ $("#signupForm").addEventListener("submit",e=>{e.preventDefault();
 });
 $("#demoPlan").onchange=e=>setPlan(e.target.value);
 $("#demoScreen").onchange=e=>show(e.target.value);
+$("#demoToggle").onclick=()=>{const o=$("#demoBar").classList.toggle("open"); $("#demoToggle").setAttribute("aria-expanded",o);};
 
 // Install as an app (desktop or phone home screen)
 let installEvt=null;
