@@ -148,7 +148,7 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
   #toolPanel.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 calc(16px + env(safe-area-inset-bottom))}
   #toolPanel.sheet > .card{border:0;border-radius:0;margin:0}
   #toolPanel.sheet .sheetbar{display:flex;position:sticky;top:0;z-index:2;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top))}
-  .sheetbar button{background:none;border:0;color:#fff;font-weight:600;font-size:1rem;padding:6px 8px;min-height:40px}
+  .sheetbar button{flex:none;white-space:nowrap;background:none;border:0;color:#fff;font-weight:600;font-size:1rem;padding:6px 8px;min-height:40px}
   .sheetbar span{font-family:var(--display);font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   body.sheet-open{overflow:hidden}
   /* Sign-in and sign-up fill the screen */
@@ -245,16 +245,17 @@ const PLANS=[
 // Zebo's toolkit list (Nov 10): 5 checklists and 6 tools. Plan per item is a guess for Zebo to confirm.
 const TOOLS=[
   {id:"onboard",name:"Property onboarding and listing checklist",desc:"Size, exposure, trash, parking, amenities and photos, all in one place. Writes your listing draft from your answers.",plan:"basic",type:"Checklist",live:true,src:"tools/onboarding.html"},
+  {id:"listing",name:"Listing publish pack",desc:"Turns your onboarded property into a ready-to-paste listing for Zillow, Apartments.com, Furnished Finder, Zumper, CHBO and Facebook Marketplace.",plan:"premium",type:"Tool",live:true,src:"tools/listing.html"},
   {id:"furnish",name:"Furnishing and inventory checklist",desc:"Room by room, with quantities for your bedrooms, beds and guests. Count what you have and see what is still to get.",plan:"premium",type:"Checklist",live:true,src:"tools/furnishing.html"},
-  {id:"utilities",name:"Utilities and WiFi setup",desc:"Setup steps, provider options and useful contacts for your city.",plan:"premium",type:"Checklist",soon:"20 Nov"},
-  {id:"consumables",name:"Final touches and consumables",desc:"What to stock, with quantities worked out for your guests and rooms.",plan:"premium",type:"Checklist",soon:"20 Nov"},
+  {id:"utilities",name:"Utilities and WiFi setup",desc:"Power, gas, water and internet set up before move-in, every provider's contact in one place, and a guest WiFi card to copy.",plan:"premium",type:"Checklist",live:true,src:"tools/utilities.html"},
+  {id:"consumables",name:"Final touches and consumables",desc:"Toiletries, paper goods, cleaning supplies and a starter pantry, with quantities worked out for your guests and rooms, plus a shopping list.",plan:"premium",type:"Checklist",live:true,src:"tools/consumables.html"},
   {id:"cleaning",name:"Cleaning instructions",desc:"How to clean the apartment before the first guest, between stays and during long stays.",plan:"basic",type:"Checklist",soon:"27 Nov"},
   {id:"inspection",name:"Move-in inspection report",desc:"Room-by-room condition report with photos, signed at move-in.",plan:"basic",type:"Tool",soon:"27 Nov"},
   {id:"calc",name:"Rental profit calculator",desc:"Monthly revenue, costs and profit for one unit.",plan:"premium",type:"Calculator"},
   {id:"startup",name:"Startup cost and payback calculator",desc:"What it costs to set up a unit and how many months until it pays back.",plan:"premium",type:"Calculator",soon:"11 Dec"},
   {id:"scorecard",name:"Market and unit scorecard",desc:"Score a city and an apartment before you commit.",plan:"premium",type:"Tool",soon:"18 Dec"},
   {id:"welcome",name:"Digital welcome book builder",desc:"Build a guest welcome book for your apartment and share it with a link.",plan:"full",type:"Tool",soon:"23 Dec"},
-  {id:"mood",name:"Moodboard generator",desc:"Answer a few questions and get a sample moodboard for each room.",plan:"premium",type:"Tool",soon:"23 Dec"}
+  {id:"mood",name:"Moodboard generator",desc:"Answer a few questions and get a sample moodboard for each room.",plan:"premium",type:"Tool",soon:"January"}
 ];
 const CHECKS={};
 let done={};
@@ -308,6 +309,7 @@ function tools(){
     <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${t.type}</span>${ok?"":lockPill(t.plan)}</div>
       <h3>${t.name}${t.live?` <span class="pill" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Working draft</span>`:t.soon?` <span class="pill lock" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Coming ${t.soon}</span>`:""}</h3><p class="small" style="margin:0">${t.desc}</p>
       <div class="row"><span></span>${ok?`<button class="btn ${t.id==="calc"?"":"ghost"}" data-tool="${t.id}">Open</button>`:`<button class="btn ghost" data-upgrade="${t.plan}">Upgrade to ${PLAN_NAME[t.plan]}</button>`}</div></div>`}).join("")}</div>
+  <p class="small" style="margin:0">Flat to Scale tools are general educational information, not legal, tax, accounting, financial or investment advice. The full disclaimer is at the bottom of each tool.</p>
   <div id="toolPanel"></div>
   <div class="card" id="calcCard"><h2>Rental profit calculator</h2>
     <p class="small" style="margin:0">Mid-term stays are 90+ nights, so price by the month.</p>
@@ -353,13 +355,6 @@ function renderChecklistInner(id){
   const t=TOOLS.find(x=>x.id===id); const box=$("#toolPanel");
   if(t.live){box.innerHTML=`<div class="card" style="padding:0;overflow:hidden"><iframe id="liveTool" src="${t.src}" title="${t.name}" style="width:100%;height:900px;border:0;display:block"></iframe></div>`;
     reveal(box); return;}
-  if(id==="consumables"){box.innerHTML=`<div class="card"><h2>${t.name}</h2><p class="small" style="margin:0">Example quantities for Zebo to replace. Change the numbers and the list updates.</p>
-    <div class="calc"><div class="field"><label for="gN">Guests</label><input id="gN" type="number" min="1" value="2"></div><div class="field"><label for="bN">Bedrooms</label><input id="bN" type="number" min="1" value="1"></div><div class="field"><label for="baN">Bathrooms</label><input id="baN" type="number" min="1" value="1"></div></div>
-    <table><thead><tr><th>Item</th><th>Rule</th><th>Quantity</th></tr></thead><tbody id="consRows"></tbody></table></div>`;
-    const upd=()=>{const g=+$("#gN").value||1,b=+$("#bN").value||1,ba=+$("#baN").value||1;
-      const rows=[["Bath towels","2 per guest",2*g],["Hand towels","1 per bathroom, plus 1 spare",ba+1],["Bed linen sets","2 per bedroom",2*b],["Toilet paper rolls","4 per bathroom",4*ba],["Shampoo and shower gel","1 each per bathroom",ba],["Dish soap and sponges","1 set per kitchen",1],["Coffee and tea","Starter pack per stay",1],["Bin bags","1 roll per week, start with 2",2]];
-      $("#consRows").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td class="small">${r[1]}</td><td><strong>${r[2]}</strong></td></tr>`).join("");};
-    ["#gN","#bN","#baN"].forEach(i=>$(i).oninput=upd); upd(); reveal(box); return;}
   const items=CHECKS[id]||[]; done[id]=done[id]||{};
   const n=Object.values(done[id]).filter(Boolean).length;
   box.innerHTML=`<div class="card"><div class="row"><h2>${t.name}</h2><span class="pill">${n} of ${items.length} done</span></div>
@@ -407,7 +402,7 @@ function bind(){
   document.querySelectorAll("[data-portal]").forEach(b=>b.onclick=()=>openDialog(b.dataset.portal==="cancel"?"Cancel your plan":"Update your card","In the real app this opens Stripe's secure billing page. Access stays until the end of the paid month."));
   document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{
     if(b.dataset.tool==="calc"){$("#calcCard").scrollIntoView({behavior:"smooth"});$("#rent").focus();}
-    else if(b.dataset.tool==="consumables"||TOOLS.find(t=>t.id===b.dataset.tool).live) renderChecklist(b.dataset.tool);
+    else if(TOOLS.find(t=>t.id===b.dataset.tool).live) renderChecklist(b.dataset.tool);
     else if(TOOLS.find(t=>t.id===b.dataset.tool).soon){const t=TOOLS.find(t=>t.id===b.dataset.tool); openDialog(t.name,`Being built now. Ready for Zebo's review by ${t.soon}.`);}
     else openDialog(TOOLS.find(t=>t.id===b.dataset.tool).name,"In the real app this opens the tool, saved to the member's own account.");
   });
@@ -415,7 +410,13 @@ function bind(){
   calc();
   const so=$("#signout"); if(so) so.onclick=()=>show("login");
 }
-window.addEventListener("message",e=>{const f=$("#liveTool");if(f&&e.source===f.contentWindow&&e.data&&e.data.f2sHeight)f.style.height=Math.max(400,e.data.f2sHeight)+"px";});
+window.addEventListener("message",e=>{const f=$("#liveTool");if(!f||e.source!==f.contentWindow||!e.data)return;
+  if(e.data.f2sHeight) f.style.height=Math.max(400,e.data.f2sHeight)+"px";
+  // A tool asks to open the next tool, e.g. onboarding -> listing activation
+  if(e.data.f2sOpenTool){const t=TOOLS.find(x=>x.id===e.data.f2sOpenTool); if(!t||!t.live) return;
+    if(!has(t.plan)){openDialog(`Move to ${PLAN_NAME[t.plan]}?`,`${t.name} is in the ${PLAN_NAME[t.plan]} plan. In the real app this opens checkout.`,()=>setPlan(t.plan),`Move to ${PLAN_NAME[t.plan]}`);return;}
+    renderChecklist(t.id); const nf=$("#liveTool"); if(nf) nf.src=t.src+"?from=onboarding"; $("#toolPanel").scrollTop=0;}
+});
 function go(v){view=v; try{localStorage.setItem("f2sView",v)}catch(e){} render(); window.scrollTo(0,0);}
 document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>go(b.dataset.view));
 function show(s){screen=s; render(); window.scrollTo(0,0);}
