@@ -105,6 +105,9 @@ tr.is-na .iname{text-decoration:line-through}
   th.st,td.st{display:none}
   td.num,th.num{width:66px;padding:9px 6px}
 }
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,select,textarea{-webkit-user-select:text;user-select:text}
+@media print{body>*{display:none!important}body::after{content:"Printing is turned off for this checklist. Flat to Scale members' use only.";display:block;padding:40px;font:16px sans-serif}}
 </style>
 </head>
 <body>
@@ -134,7 +137,6 @@ tr.is-na .iname{text-decoration:line-through}
         <button type="button" data-filter="all" aria-pressed="true">All items</button>
         <button type="button" data-filter="missing" aria-pressed="false">Still to get</button>
       </div>
-      <button type="button" class="btn" id="expand">Open all groups</button>
       <button type="button" class="btn" id="reset">Start over</button>
     </div>
     <div class="pending"><span>&#9432;</span><span><strong>Quantities are suggested starting points for Zebo to confirm.</strong> They cover the first stock-up before move-in. <strong>No restocking during a 90+ night stay</strong>, unless agreed with the guest in advance or decided on the spot.</span></div>
@@ -142,13 +144,9 @@ tr.is-na .iname{text-decoration:line-through}
 
   <div class="sections" id="sections"></div>
 
-  <section class="panel out" aria-labelledby="shop-h">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-      <h2 id="shop-h">Shopping list</h2>
-      <button type="button" class="btn solid" id="copy">Copy shopping list</button>
-    </div>
-    <p style="margin:6px 0 0;color:var(--muted);font-size:.92rem">Everything still to get, with how many. Paste it into your notes or send it to whoever does the shopping.</p>
-    <div class="shop" id="shop"></div>
+  <section class="panel" aria-labelledby="prot-h" style="margin-top:18px;border-left:4px solid var(--teal)">
+    <h2 id="prot-h" style="font-size:1.05rem">One group at a time</h2>
+    <p style="margin:6px 0 0;color:var(--muted);font-size:.92rem">Open a group to count what you have and see what is still to get. Only one group opens at a time. To protect Flat to Scale's lists, this checklist can't be copied, printed or saved as a whole.</p>
   </section>
 
   <div class="foot">
@@ -230,6 +228,7 @@ function unit(){return{rooms:Math.max(1,+state.bedrooms),baths:+state.baths,gues
 
 function render(){
   const u=unit(), host=$("sections"); host.innerHTML="";
+  {let first=true;SECTIONS.forEach(s=>{if(state.open[s.id]){if(first)first=false;else state.open[s.id]=false}})}
   let totItems=0,totDone=0;
   SECTIONS.forEach(sec=>{
     const d=document.createElement("details"); d.className="sec"; d.open=!!state.open[sec.id];
@@ -251,27 +250,19 @@ function render(){
       <span class="bar" aria-hidden="true"><span style="width:${pct}%"></span></span></summary>
       ${sec.note?`<p class="sec-note">${sec.note}</p>`:""}
       ${shown?`<table><thead><tr><th>Item</th><th class="num">Need</th><th class="num">Have</th><th class="st">Status</th></tr></thead><tbody>${rows}</tbody></table>`:`<div class="empty">Everything in this group is done.</div>`}`;
-    d.addEventListener("toggle",()=>{state.open[sec.id]=d.open;save()});
+    d.addEventListener("toggle",()=>{state.open[sec.id]=d.open;
+      if(d.open){SECTIONS.forEach(s=>{if(s.id!==sec.id)state.open[s.id]=false});host.querySelectorAll("details.sec").forEach(x=>{if(x!==d)x.open=false});}
+      save()});
     host.appendChild(d);
   });
   const pct=totItems?Math.round(100*totDone/totItems):0;
   $("totbar").style.width=pct+"%"; $("totpct").textContent=pct+"%";
   $("totline").textContent=`${totDone} of ${totItems} items complete`;
-  $("shop").textContent=shopText();
 }
 const plural=(w,n)=>n===1||w==="each"?w:/(x|sh|ch)$/.test(w)?w+"es":w+"s";
-function shopText(){
-  const u=unit(), lines=[];
-  SECTIONS.forEach(sec=>{
-    const l=sec.items.filter(([id])=>!state.na[id]).map(([id,name,rule,q,word])=>{const left=q(u)-Math.min(+(state.have[id]||0),999);return left>0?`• ${name}: ${left}${word?" "+plural(word,left):""}`:null}).filter(Boolean);
-    if(l.length) lines.push(sec.name.toUpperCase()+"\n"+l.join("\n"));
-  });
-  const head=state.unit?`Shopping list: ${state.unit}\n\n`:"";
-  return lines.length?head+lines.join("\n\n"):"Nothing left to buy. Everything is stocked.";
-}
 
 function syncInputs(){$("unit").value=state.unit;$("bedrooms").value=state.bedrooms;$("baths").value=state.baths;$("guests").value=state.guests}
-$("unit").addEventListener("input",e=>{state.unit=e.target.value;save();$("shop").textContent=shopText()});
+$("unit").addEventListener("input",e=>{state.unit=e.target.value;save()});
 $("bedrooms").addEventListener("change",e=>{state.bedrooms=+e.target.value;save();render()});
 [["baths",1,6],["guests",1,16]].forEach(([k,mn,mx])=>$(k).addEventListener("change",e=>{state[k]=clampNum(e.target.value,mn,mx);e.target.value=state[k];save();render()}));
 $("sections").addEventListener("click",e=>{
@@ -287,13 +278,17 @@ $("sections").addEventListener("change",e=>{
 });
 document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>{
   filter=b.dataset.filter; document.querySelectorAll("[data-filter]").forEach(x=>x.setAttribute("aria-pressed",x===b));render()}));
-$("expand").addEventListener("click",()=>{const anyClosed=SECTIONS.some(s=>!state.open[s.id]);SECTIONS.forEach(s=>state.open[s.id]=anyClosed);save();render();$("expand").textContent=anyClosed?"Close all groups":"Open all groups"});
 $("reset").addEventListener("click",()=>{$("confirm").hidden=false;$("cancel").focus()});
 $("cancel").addEventListener("click",()=>{$("confirm").hidden=true});
 $("doreset").addEventListener("click",()=>{state={unit:"",bedrooms:1,baths:1,guests:2,have:{},na:{},open:{bath:true}};save();syncInputs();render();$("confirm").hidden=true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("confirm").hidden=true});
 function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,1800)}
-$("copy").addEventListener("click",async()=>{const txt=shopText();try{await navigator.clipboard.writeText(txt);toast("Shopping list copied")}catch(e){const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("Shopping list copied")}catch(_){toast("Copy not allowed here")}ta.remove()}});
+// Protection (Zebo, Nov 17): no copying, selecting, printing or saving the list
+document.addEventListener("copy",e=>{if(!e.target.closest||!e.target.closest("input")){e.preventDefault();toast("Copying is turned off for this checklist")}});
+document.addEventListener("cut",e=>{if(!e.target.closest||!e.target.closest("input"))e.preventDefault()});
+document.addEventListener("contextmenu",e=>{if(!e.target.closest("input"))e.preventDefault()});
+document.addEventListener("selectstart",e=>{if(!(e.target.closest&&e.target.closest("input")))e.preventDefault()});
+document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&["p","s","a","c","x"].includes(e.key.toLowerCase())&&!(e.target.closest&&e.target.closest("input")&&e.key.toLowerCase()!=="p"&&e.key.toLowerCase()!=="s")){e.preventDefault();toast(e.key.toLowerCase()==="p"?"Printing is turned off for this checklist":"Copying is turned off for this checklist")}});
 syncInputs(); render();
 
 if(window.parent!==window){
