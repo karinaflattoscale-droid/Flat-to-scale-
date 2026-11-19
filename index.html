@@ -443,7 +443,7 @@ function renderChecklistInner(id){
     bindStepBar(id); reveal(box); return;}
   const items=CHECKS[id]||[]; done[id]=done[id]||{};
   const n=Object.values(done[id]).filter(Boolean).length;
-  box.innerHTML=`<div class="card" style="padding:0;overflow:hidden">${stepBar(id)}<div style="padding:18px;display:grid;gap:12px"><div class="row"><h2>${t.name}</h2><span class="pill">${n} of ${items.length} done</span></div>
+  box.innerHTML=`<div class="card" style="padding:0;overflow:hidden">${stepBar(id)}<div style="padding:18px;display:grid;gap:12px;${wmStyle()}"><div class="row"><h2>${t.name}</h2><span class="pill">${n} of ${items.length} done</span></div>
     ${WHY[id]?`<div class="note">${WHY[id]}</div>`:""}
     <div style="display:grid;gap:12px">${items.map((it,i)=>`<label style="display:flex;gap:12px;align-items:flex-start;font-size:1.05rem"><input type="checkbox" data-i="${i}" ${done[id][i]?"checked":""} style="margin-top:5px;width:22px;height:22px;accent-color:var(--teal)"> <span>${it}</span></label>`).join("")}</div></div></div>`;
   box.querySelectorAll("input[type=checkbox]").forEach(c=>c.onchange=()=>{done[id][c.dataset.i]=c.checked; try{localStorage.setItem("f2s-checks",JSON.stringify(done))}catch(e){} renderChecklist(id);});
@@ -486,6 +486,13 @@ $("#dlgCancel").onclick=closeDialog;
 document.addEventListener("keydown",e=>{if(e.key==="Escape") closeDialog()});
 
 function setPlan(p){plan=p; $("#demoPlan").value=p; render();}
+// The member's email goes into the watermark on every checklist
+function rememberMember(em){try{localStorage.setItem("f2s-member",em||"member@example.com")}catch(e){}}
+try{if(!localStorage.getItem("f2s-member")) rememberMember($("#email").value);}catch(e){}
+function wmStyle(){let m="member@example.com";try{m=localStorage.getItem("f2s-member")||m}catch(e){}
+  const t=("Flat 2 Scale \u00B7 "+m+" \u00B7 Members only").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="360" height="220"><text x="180" y="110" text-anchor="middle" transform="rotate(-28 180 110)" font-family="Segoe UI,Arial,sans-serif" font-size="15" font-weight="600" fill="#17283F" fill-opacity="0.07">${t}</text></svg>`;
+  return `background-image:url('data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg).replace(/'/g,"%27")}');background-repeat:repeat;background-size:360px 220px`;}
 // Open a step from Home: go to My tools and open it there
 function openTool(id){const t=TOOLS.find(x=>x.id===id); if(!has(t.plan)){upsell(t.plan,id,()=>openTool(id));return;}
   if(view!=="tools") go("tools"); renderChecklist(id);}
@@ -535,7 +542,7 @@ function renderPlanPick(){
   $("#planPick").innerHTML=PLANS.map(p=>`<label><input type="radio" name="suPlan" value="${p.id}" ${p.id===pick?"checked":""}><strong>${PLAN_NAME[p.id]}</strong><span class="small">${p.price}</span><span class="small">${p.items[p.id==="basic"?0:1]}</span></label>`).join("");
   document.querySelectorAll("input[name=suPlan]").forEach(r=>r.onchange=()=>{pick=r.value;});
 }
-$("#loginForm").addEventListener("submit",e=>{e.preventDefault(); show("app");});
+$("#loginForm").addEventListener("submit",e=>{e.preventDefault(); rememberMember($("#email").value); show("app");});
 $("#toSignup").onclick=()=>show("front");
 $("#frontJoin").onclick=()=>show("signup");
 $("#frontSignin").onclick=()=>show("login");
