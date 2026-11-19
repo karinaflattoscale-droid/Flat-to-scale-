@@ -116,7 +116,7 @@ details[open] .chev{transform:rotate(90deg)}
 <header class="top"><div class="wrap">
   <h1>Your apartment details</h1>
   <p>Collect everything about the unit once: size, light and exposure, trash, parking, building and community amenities, and the details a 90+ night guest asks about. The listing draft at the bottom writes itself from your answers.</p>
-  <span class="draft">Draft v0.2 for Zebo's review</span>
+  <span class="draft">Draft v0.3 for Zebo's review</span>
   <p style="font-size:.92rem">Items marked <strong style="color:#fff">LISTING</strong> feed the listing draft. Items marked <strong style="color:#fff">PRIVATE</strong> are for you and your team only and never appear in the listing. Tap <strong style="color:#fff">N/A</strong> on anything that does not apply to your unit and it is skipped.</p>
 </div></header>
 
@@ -266,12 +266,13 @@ const SECTIONS=[
   {k:"pets",t:"text",l:"Pets",h:"e.g. no pets, or dogs under 25 lb with fee",lst:1},
   {k:"smoke",t:"sel",l:"Smoking",o:["No smoking anywhere","Outside only, in marked areas"],lst:1},
   {k:"quiet",t:"text",l:"Quiet hours and building rules",lst:1},
-  {k:"docs",t:"check",l:"Papers on file",items:[["d_lease","Lease or ownership papers"],["d_ins","Insurance covering furnished rental"],["d_hoa","Building or HOA rules copy"],["d_permit","City registration or permit, if required"]],w:1}
+  {k:"docs",t:"check",l:"Papers on file",items:[["d_lease","Lease or ownership papers"],["d_ins","Insurance that covers the rental and your furniture"],["d_hoa","Building or HOA rules copy"],["d_permit","City registration or permit, if required"],["d_fees","Full list of move-in fees from the building, in writing (N/A if you own)"],["d_monthly","List of monthly extra charges (trash, tech fee, HOA). Add them to your real monthly cost"]],w:1},
+  {k:"tenant",t:"check",l:"Before the tenant moves in",items:[["t_id","Checked the tenant's photo ID"],["t_card","The card owner is the tenant, or agreed in writing to pay"],["t_proof","Signed agreement and all messages saved"]],w:1}
  ]},
  {id:"photos",name:"Photos",note:"Shoot in landscape (phone held sideways), in daylight, with every light on. Stand in a corner at chest height so each room shows two walls.",fields:[
   {k:"shots",t:"check",l:"Shot list",items:[
    ["s_living","Living room, from two corners"],["s_kitchen","Kitchen, plus one close-up of the counter"],["s_bed","Each bedroom, bed made"],["s_bath","Each bathroom"],["s_work","Workspace"],["s_laundry","Washer and dryer"],["s_view","View from the main window"],["s_bldg","Building entrance"],["s_amen","Each amenity you listed"],["s_park","Parking spot or garage"]],w:1},
-  {k:"pcheck",t:"check",l:"Before you upload",items:[["p_land","All photos in landscape"],["p_tidy","No personal items, cables or bins in shot"],["p_cover","Cover photo is the brightest room"]],w:1}
+  {k:"pcheck",t:"check",l:"Before you upload",items:[["p_land","All photos in landscape"],["p_tidy","No personal items, cables or bins in shot"],["p_cover","Cover photo is the brightest room"],["p_pro","Good photos win tenants: use a professional photographer, and add a video tour if you can"]],w:1}
  ]}
 ];
 
