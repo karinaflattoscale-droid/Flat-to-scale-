@@ -359,5 +359,21 @@ if(window.parent!==window){
   new ResizeObserver(send).observe(document.body); send();
 }
 </script>
+<!-- F2S watermark: light diagonal text with the member's email, on screen and in print -->
+<style>
+.f2s-wm{position:fixed;inset:0;pointer-events:none;z-index:2147483000;background-repeat:repeat;background-size:360px 220px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@media print{.f2s-wm{position:fixed;display:block !important}}
+</style>
+<script>
+(function(){
+  var m=""; try{m=localStorage.getItem("f2s-member")||"";}catch(e){}
+  var t="Flat 2 Scale"+(m?" · "+m:"")+" · Members only";
+  t=t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" width="360" height="220"><text x="180" y="110" text-anchor="middle" transform="rotate(-28 180 110)" font-family="Segoe UI,Arial,sans-serif" font-size="15" font-weight="600" fill="#17283F" fill-opacity="0.07">'+t+'</text></svg>';
+  var d=document.createElement("div"); d.className="f2s-wm"; d.setAttribute("aria-hidden","true");
+  d.style.backgroundImage='url("data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)+'")';
+  document.body.appendChild(d);
+})();
+</script>
 </body>
 </html>
