@@ -107,7 +107,7 @@ tr.is-na .iname{text-decoration:line-through}
   
   <h1>Furnish your apartment</h1>
   <p>Room-by-room list of what a mid-term rental (90+ nights) needs before the first guest moves in. Enter your unit, then count what you have. Quantities update to match the unit. Something that doesn't fit your unit? Tap <strong style="color:#fff">N/A</strong> and it is skipped.</p>
-  <span class="draft">Draft v0.4 for Zebo's review</span>
+  <span class="draft">Draft v0.5 for Zebo's review</span>
   
 </div></header>
 
@@ -183,7 +183,7 @@ const SECTIONS = [
   ["dart","Artwork","1 per unit",fixed(1)],
   ["dacc","Dining table accessory","1 per unit",fixed(1)]
  ]},
- {id:"bedroom", name:"Bedrooms", note:"A studio counts as one sleeping area.", items:[
+ {id:"bedroom", name:"Bedrooms", note:"A studio counts as one sleeping area. Plan to replace mattress protectors about every 1 to 2 years and mattresses about every 7 to 10 years.", items:[
   ["bed","Bed frame and mattress (queen)","1 per bed",per("beds")],
   ["dresser","Dresser with mirror, or chest of drawers","1 per bedroom",per("rooms")],
   ["nstand","Nightstands","2 per bedroom",per("rooms",2)],
@@ -193,7 +193,7 @@ const SECTIONS = [
   ["bcurt","Blackout curtains or blinds","1 set per bedroom",per("rooms"),"",true],
   ["mprot","Waterproof mattress protector","1 per bed",per("beds"),"",true]
  ]},
- {id:"linen", name:"Bed linen", note:"Two full sets per bed, so one is on the bed while the other is washed.", items:[
+ {id:"linen", name:"Bed linen", note:"Two full sets per bed, so one is on the bed while the other is washed. Plan to replace sheets and pillows about every 1 to 2 years, sooner if stained.", items:[
   ["fitted","Fitted sheets","2 per bed",per("beds",2)],
   ["flat","Flat sheets","2 per bed",per("beds",2)],
   ["pcase","Pillowcases","4 per bed",per("beds",4)],
@@ -252,7 +252,7 @@ const SECTIONS = [
   ["contain","Food storage containers","1 set per unit",fixed(1),"",true],
   ["drack","Dish rack","1 per unit",fixed(1),"if no dishwasher",true]
  ]},
- {id:"bath", name:"Bathrooms", items:[
+ {id:"bath", name:"Bathrooms", note:"Plan to replace towels about every 1 to 2 years, sooner if stained.", items:[
   ["btowel","Bath towels","2 per guest, min 4",per("guests",2,4)],
   ["htowel","Hand towels","2 per guest, min 4",per("guests",2,4)],
   ["wcloth","Washcloths","2 per guest, min 4",per("guests",2,4)],
