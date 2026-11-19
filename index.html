@@ -308,7 +308,7 @@ function tools(){
   <div class="grid">${TOOLS.map(t=>{const ok=has(t.plan);return `
     <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${t.type}</span>${ok?"":lockPill(t.plan)}</div>
       <h3>${t.name}${t.live?` <span class="pill" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Working draft</span>`:t.soon?` <span class="pill lock" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Coming ${t.soon}</span>`:""}</h3><p class="small" style="margin:0">${t.desc}</p>
-      <div class="row"><span></span>${ok?`<button class="btn ${t.id==="calc"?"":"ghost"}" data-tool="${t.id}">Open</button>`:`<button class="btn ghost" data-upgrade="${t.plan}">Upgrade to ${PLAN_NAME[t.plan]}</button>`}</div></div>`}).join("")}</div>
+      <div class="row"><span></span>${ok?`<button class="btn ${t.id==="calc"?"":"ghost"}" data-tool="${t.id}">Open</button>`:`<button class="btn ghost" data-upgrade="${t.plan}" data-toolid="${t.id}">Get ${PLAN_NAME[t.plan]} plan</button>`}</div></div>`}).join("")}</div>
   <p class="small" style="margin:0">Flat to Scale tools are general educational information, not legal, tax, accounting, financial or investment advice. The full disclaimer is at the bottom of each tool.</p>
   <div id="toolPanel"></div>
   <div class="card" id="calcCard"><h2>Rental profit calculator</h2>
@@ -328,7 +328,7 @@ function courses(){
   <div class="grid">${COURSES.map(c=>{const ok=has(c.plan);const pct=Math.round(c.done/c.lessons.length*100);return `
     <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${c.lessons.length} lessons</span>${ok?`<span class="small">${pct}% done</span>`:lockPill(c.plan)}</div>
       <h3>${c.name}</h3>
-      ${ok?`<div class="bar"><span style="width:${pct}%"></span></div><ol class="lessons">${c.lessons.map((l,i)=>`<li class="${i<c.done?"done":""}">${l}</li>`).join("")}</ol>`:`<ol class="lessons small">${c.lessons.map(l=>`<li>${l}</li>`).join("")}</ol><button class="btn ghost" data-upgrade="${c.plan}">Upgrade to ${PLAN_NAME[c.plan]}</button>`}
+      ${ok?`<div class="bar"><span style="width:${pct}%"></span></div><ol class="lessons">${c.lessons.map((l,i)=>`<li class="${i<c.done?"done":""}">${l}</li>`).join("")}</ol>`:`<ol class="lessons small">${c.lessons.map(l=>`<li>${l}</li>`).join("")}</ol><button class="btn ghost" data-upgrade="${c.plan}">Get ${PLAN_NAME[c.plan]} plan</button>`}
     </div>`}).join("")}</div>`;
 }
 
@@ -382,8 +382,9 @@ function calc(){
   $("#rRev").textContent=money(rev); $("#rCost").textContent=money(cost);
   const p=$("#rProfit"); p.textContent=money(rev-cost); p.style.color=rev-cost>=0?"var(--good)":"#B4443A";
 }
-function openDialog(title,text,onOk,okLabel){
+function openDialog(title,text,onOk,okLabel,cancelLabel){
   $("#dlgTitle").textContent=title; $("#dlgText").textContent=text;
+  $("#dlgCancel").textContent=cancelLabel||"Close";
   const ok=$("#dlgOk"); ok.hidden=!onOk; ok.textContent=okLabel||"Confirm";
   ok.onclick=()=>{closeDialog(); onOk&&onOk();};
   $("#dlg").classList.add("open"); (onOk?ok:$("#dlgCancel")).focus();
@@ -393,11 +394,22 @@ $("#dlgCancel").onclick=closeDialog;
 document.addEventListener("keydown",e=>{if(e.key==="Escape") closeDialog()});
 
 function setPlan(p){plan=p; $("#demoPlan").value=p; render();}
+// Upgrade pop-up copy: sell the outcome, short and warm
+const PLAN_PITCH={
+  premium:["Get all the checklists","Easy step-by-step lists for furniture, internet and the final touches. Part of the Premium plan."],
+  full:["Get every tool","Everything in Premium, plus ready-made rental ads and a welcome book for your guests. Part of the Full plan."]};
+const TOOL_PITCH={
+  listing:["Put your place online for rent","We write your rental ad for Zillow, Apartments.com, Furnished Finder and more. You just copy and paste. Part of the Full plan."]};
+function upsell(p,toolId,after){
+  const [t,txt]=TOOL_PITCH[toolId]||PLAN_PITCH[p]||[`Get ${PLAN_NAME[p]} plan`,`Included in the ${PLAN_NAME[p]} plan.`];
+  openDialog(t,txt,()=>{setPlan(p); after&&after();},`Get ${PLAN_NAME[p]} plan`,"Not now");
+}
 function bind(){
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
   document.querySelectorAll("[data-upgrade],[data-switch]").forEach(b=>b.onclick=()=>{
     const p=b.dataset.upgrade||b.dataset.switch;
-    openDialog(`Move to ${PLAN_NAME[p]}?`,`In the real app this opens checkout and you pay the difference. In this prototype it just unlocks the ${PLAN_NAME[p]} content.`,()=>setPlan(p),`Move to ${PLAN_NAME[p]}`);
+    if(RANK[p]>RANK[plan]) upsell(p,b.dataset.toolid);
+    else openDialog(`Switch to ${PLAN_NAME[p]}?`,`You keep everything in your current plan until the end of the paid month.`,()=>setPlan(p),`Switch to ${PLAN_NAME[p]}`,"Not now");
   });
   document.querySelectorAll("[data-portal]").forEach(b=>b.onclick=()=>openDialog(b.dataset.portal==="cancel"?"Cancel your plan":"Update your card","In the real app this opens Stripe's secure billing page. Access stays until the end of the paid month."));
   document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{
@@ -414,8 +426,9 @@ window.addEventListener("message",e=>{const f=$("#liveTool");if(!f||e.source!==f
   if(e.data.f2sHeight) f.style.height=Math.max(400,e.data.f2sHeight)+"px";
   // A tool asks to open the next tool, e.g. onboarding -> listing activation
   if(e.data.f2sOpenTool){const t=TOOLS.find(x=>x.id===e.data.f2sOpenTool); if(!t||!t.live) return;
-    if(!has(t.plan)){openDialog(`Move to ${PLAN_NAME[t.plan]}?`,`${t.name} is in the ${PLAN_NAME[t.plan]} plan. In the real app this opens checkout.`,()=>setPlan(t.plan),`Move to ${PLAN_NAME[t.plan]}`);return;}
-    renderChecklist(t.id); const nf=$("#liveTool"); if(nf) nf.src=t.src+"?from=onboarding"; $("#toolPanel").scrollTop=0;}
+    const openIt=()=>{renderChecklist(t.id); const nf=$("#liveTool"); if(nf) nf.src=t.src+"?from=onboarding"; $("#toolPanel").scrollTop=0;};
+    if(!has(t.plan)){upsell(t.plan,t.id,openIt);return;}
+    openIt();}
 });
 function go(v){view=v; try{localStorage.setItem("f2sView",v)}catch(e){} render(); window.scrollTo(0,0);}
 document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>go(b.dataset.view));
