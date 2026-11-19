@@ -37,7 +37,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none !important}
 html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.55}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.25}
 h1{font-size:1.6rem} h2{font-size:1.2rem} h3{font-size:1rem}
 button,input,select{font:inherit}
@@ -54,12 +54,13 @@ button{cursor:pointer}
 .field{display:grid;gap:4px}
 .field label{font-weight:600;font-size:.92rem}
 .field input,.field select{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
-.btn{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:600}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:10px;padding:12px 20px;min-height:48px;font-weight:600}
+.btn.big{font-size:1.1rem;padding:16px 26px;min-height:58px;width:100%;max-width:420px}
 :root[data-theme="dark"] .btn{background:var(--teal)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{background:var(--teal)}}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .btn.danger{background:transparent;color:#B4443A;border:1px solid var(--line)}
-.small{font-size:.88rem;color:var(--muted)}
+.small{font-size:.95rem;color:var(--muted)}
 .linkbtn{background:none;border:0;padding:0;color:var(--teal);font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.85rem}.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .demo-bar .installbtn{background:#fff;color:var(--navy);border:0;border-radius:6px;padding:3px 10px;font-weight:600;font-size:.88rem}
@@ -80,6 +81,38 @@ button{cursor:pointer}
 .planpick label:has(input:focus-visible){outline:3px solid var(--teal);outline-offset:2px}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem}
 .check input{margin-top:4px;accent-color:var(--teal)}
+/* Website front page */
+.front{max-width:760px;width:100%;display:grid;gap:22px}
+.hero{background:var(--navy);color:#fff;border-radius:18px;padding:32px 26px;display:grid;gap:14px}
+.hero h1{font-size:2rem;color:#fff}
+.hero p{margin:0;font-size:1.1rem;color:#DCE7EE}
+.hero .btn{background:#fff;color:var(--navy)}
+.hero .linkbtn{color:#fff}
+.benefits{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.benefits li{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;font-weight:600}
+.benefits li span{display:block;font-weight:400;color:var(--muted);font-size:.95rem;margin-top:4px}
+.zebo{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.photo{width:120px;height:120px;border-radius:50%;border:3px dashed var(--teal);display:grid;place-items:center;text-align:center;font-size:.8rem;color:var(--muted);background:var(--teal-soft);padding:8px}
+@media (max-width:560px){.zebo{grid-template-columns:1fr;justify-items:center;text-align:center}}
+.draftnote{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.03em;color:#8A5A00;background:#FFF4D6;border:1px solid #F0D58A;border-radius:6px;padding:1px 8px}
+.faq{display:grid;gap:10px}
+.faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.faq summary{font-weight:600;cursor:pointer;font-size:1.05rem}
+.faq p{margin:8px 0 0;color:var(--muted)}
+/* Home: next step path */
+.nextcard{background:var(--teal-soft);border:2px solid var(--teal);border-radius:16px;padding:22px;display:grid;gap:12px}
+.nextcard h2{font-size:1.5rem}
+.path{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.path li button{width:100%;display:flex;gap:14px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--ink);min-height:56px}
+.path .num{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;border:2px solid var(--line)}
+.path li.done .num{background:var(--good);border-color:var(--good);color:#fff}
+.path li.now button{border:2px solid var(--teal)}
+.path li.now .num{border-color:var(--teal);color:var(--teal)}
+.path .lk{margin-left:auto;font-size:.85rem;color:var(--muted);white-space:nowrap}
+.calc{grid-template-columns:1fr !important;max-width:520px;align-items:start}
+.calc .field{align-content:start}
+.calc h3{grid-column:1/-1;margin-top:10px;font-size:1.05rem;color:var(--teal)}
+.tip{font-size:.85rem;color:var(--muted)}
 /* Shell */
 .shell{display:grid;grid-template-columns:230px 1fr;min-height:calc(100% - 40px)}
 nav.side{background:var(--navy);color:#fff;padding:20px 14px;display:flex;flex-direction:column;gap:6px}
@@ -101,7 +134,7 @@ main{padding:28px 32px;display:grid;gap:22px;align-content:start;max-width:1100p
 ol.lessons{margin:0;padding-left:20px;display:grid;gap:4px}
 ol.lessons li.done{color:var(--muted);text-decoration:line-through}
 .calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.calc .field{align-content:end}
+.calc .field{align-content:start}
 .result{font-family:var(--display);font-size:1.5rem;font-variant-numeric:tabular-nums}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-size:.95rem}
@@ -171,7 +204,7 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
   <span><strong>Prototype.</strong> No real accounts or payments. Tools, courses and plan contents are examples for Zebo to replace.</span>
   <span style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center">
   <label for="demoScreen">Show
-    <select id="demoScreen"><option value="app">App (signed in)</option><option value="login">Sign-in screen</option><option value="signup">Create account (website)</option></select>
+    <select id="demoScreen"><option value="app">App (signed in)</option><option value="login">Sign-in screen</option><option value="front">Website front page</option><option value="signup">Join page (website)</option></select>
   </label>
   <label for="demoPlan">Preview as
     <select id="demoPlan"><option value="basic">Basic</option><option value="premium" selected>Premium</option><option value="full">Full</option></select>
@@ -193,6 +226,38 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
     <button class="btn ghost" type="button" id="toSignup">Join Flat 2 Scale</button>
     <p class="small" style="margin:0">You join on our website in 2 minutes. Then come back here and sign in with the same email.</p>
   </form>
+</section>
+
+<section class="site" id="front" hidden>
+  <div class="sitebar"><div class="brand"><span class="mark">F2S</span>Flat 2 Scale</div><button class="linkbtn" type="button" id="frontSignin">Members sign in</button></div>
+  <div class="front">
+    <div class="hero">
+      <h1>Turn your apartment into steady monthly income</h1>
+      <p>Simple steps to get your apartment ready and rent it to reliable professionals and people relocating for work, staying three months or more.</p>
+      <a class="btn big" id="blueprintBtn" href="https://forms.gle/Z8vnWJimdXJs7Bc36" target="_blank" rel="noopener" style="text-align:center;text-decoration:none;display:grid;place-items:center">Get my free Scale Blueprint</a>
+      <span style="font-size:.95rem;color:#DCE7EE">Free. Zebo looks at your apartment and tells you what to do first.</span>
+    </div>
+    <ul class="benefits">
+      <li>Get your apartment ready<span>Step by step, from furniture to WiFi.</span></li>
+      <li>Find reliable tenants<span>People who stay three months or more.</span></li>
+      <li>Know what you really earn<span>Every cost counted, no surprises.</span></li>
+    </ul>
+    <div class="zebo">
+      <div class="photo" aria-label="Placeholder for Zebo's photo">Zebo's photo here</div>
+      <div><span class="draftnote">DRAFT, for Zebo to approve</span>
+        <h2 style="margin:6px 0">Hi, I'm Zebo</h2>
+        <p style="margin:0">I furnish apartments and rent them to people who stay for months, not nights. I learned the hard way what it really costs: building fees, empty weeks, surprise bills. Flat 2 Scale gives you my simple, step-by-step way, so you can skip those costly mistakes.</p></div>
+    </div>
+    <div><h2 style="margin-bottom:10px">Is this for me?</h2>
+    <div class="faq">
+      <details><summary>I'm not a professional. Is this for me?</summary><p>Yes. It is made for private owners with one to five apartments, not for companies.</p></details>
+      <details><summary>I'm not good with technology.</summary><p>If you can use WhatsApp, you can use this. Big buttons, plain words, one step at a time.</p></details>
+      <details><summary>Is it worth the money?</summary><p>One avoided mistake, like a surprise building fee or a hidden water leak, can pay for it.</p></details>
+      <details><summary>I don't have time for a course.</summary><p>No long course. Short steps you can do on your phone in a few minutes.</p></details>
+      <details><summary>Can I trust this?</summary><p>These are the same steps Zebo uses in her own apartments. And you can cancel any time.</p></details>
+    </div></div>
+    <p class="small" style="margin:0;text-align:center">Already know you want the tools? <button class="linkbtn" type="button" id="frontJoin">Join the members' area</button></p>
+  </div>
 </section>
 
 <section class="site" id="signup" hidden>
@@ -221,8 +286,7 @@ th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-s
   <nav class="side" aria-label="Main">
     <div class="brand"><span class="mark">F2S</span>Flat 2 Scale</div>
     <button class="navbtn" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
-    <button class="navbtn" data-view="tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2"/></svg>Tools</button>
-    <button class="navbtn" data-view="courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l10-4 10 4-10 4z"/><path d="M6 9v6c3 2 9 2 12 0V9"/></svg>Lessons</button>
+    <button class="navbtn" data-view="tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2"/></svg>My tools</button>
     <button class="navbtn" data-view="account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 5-6 8-6s7 2 8 6"/></svg>Account</button>
   </nav>
   <header class="appbar"><div class="brand"><span class="mark">F2S</span>Flat 2 Scale</div><span class="pill" id="appbarPlan"></span></header>
@@ -250,6 +314,7 @@ const TOOLS=[
   {id:"furnish",name:"Furnish your apartment",desc:"A room-by-room shopping list, sized to your beds and the people staying. Tick what you already have and see what is left to buy.",plan:"premium",type:"Step by step",live:true,src:"tools/furnishing.html"},
   {id:"utilities",name:"Power, water and WiFi",desc:"Get everything switched on before your tenant arrives, with every provider's phone number in one place and a WiFi card for your tenant.",plan:"premium",type:"Step by step",live:true,src:"tools/utilities.html"},
   {id:"consumables",name:"Final touches",desc:"Towels, toiletries, cleaning supplies and a few kitchen basics, so your tenant feels at home from day one. One list at a time.",plan:"premium",type:"Step by step",live:true,src:"tools/consumables.html"},
+  {id:"protect",name:"Protect yourself before move-in",desc:"Five quick checks before your tenant moves in, so a bank can't take your rent back later.",plan:"basic",type:"Step by step",inline:true},
   {id:"cleaning",name:"Cleaning guide",desc:"How to clean your apartment before the first tenant, between tenants and during long stays.",plan:"basic",type:"Step by step",soon:"27 Nov"},
   {id:"inspection",name:"Move-in check",desc:"Take photos of each room and note how it looks. You and your tenant both sign on move-in day.",plan:"basic",type:"Helper",soon:"27 Nov"},
   {id:"calc",name:"How much will I earn?",desc:"See what is left each month after rent, bills and cleaning.",plan:"premium",type:"Money"},
@@ -258,8 +323,13 @@ const TOOLS=[
   {id:"welcome",name:"Welcome guide for your tenant",desc:"Make a friendly welcome guide for your apartment and send it with one link.",plan:"full",type:"Helper",soon:"23 Dec"},
   {id:"mood",name:"Style ideas for each room",desc:"Answer a few questions and get a picture board of ideas for each room.",plan:"premium",type:"Helper",soon:"January"}
 ];
-const CHECKS={};
-let done={};
+const CHECKS={protect:["Check the tenant's photo ID. The name must match the lease.","Make sure the person paying is the tenant. If someone else pays, get their OK in writing, signed, with a copy of their ID.","Both of you sign the lease before move-in day.","Keep every message, receipt and the signed lease together in one folder.","On move-in day, take photos of every room."]};
+const WHY={protect:"Why this matters: weeks later, a tenant or the card owner can tell their bank they never stayed and take the money back. This often costs owners $2,000 to $5,000. These steps help you prove the stay was real."};
+// The simple path every owner follows, in order
+const STEPS=["onboard","furnish","utilities","consumables","protect","listing"];
+let stepsDone={}; try{stepsDone=JSON.parse(localStorage.getItem("f2s-steps")||"{}")}catch(e){}
+function markStep(id,v){stepsDone[id]=v; try{localStorage.setItem("f2s-steps",JSON.stringify(stepsDone))}catch(e){}}
+let done={}; try{done=JSON.parse(localStorage.getItem("f2s-checks")||"{}")}catch(e){}
 const COURSES=[
   {name:"Rent out your first furnished apartment",plan:"basic",lessons:["Is your apartment a good fit?","Getting your apartment ready","Furnishing without overspending","Your rental ad and price","Welcoming your first tenant"],done:3},
   {name:"Tenants who stay a few months",plan:"premium",lessons:["Who rents for 3 months or more","Setting your monthly price","Leases and deposits made simple","Finding reliable professionals and people relocating for work"],done:1},
@@ -268,65 +338,72 @@ const COURSES=[
 let plan="premium", view="home", screen="app";
 const $=s=>document.querySelector(s);
 const has=p=>RANK[plan]>=RANK[p];
-try{const v=localStorage.getItem("f2sView"); if(v) view=v;}catch(e){}
+try{const v=localStorage.getItem("f2sView"); if(v&&v!=="courses") view=v;}catch(e){}
 
 function lockPill(p){return `<span class="pill lock" aria-label="Locked">&#128274; ${PLAN_NAME[p]} plan</span>`}
 
 function render(){
-  $("#login").hidden=screen!=="login"; $("#signup").hidden=screen!=="signup"; $("#app").hidden=screen!=="app";
+  $("#login").hidden=screen!=="login"; $("#signup").hidden=screen!=="signup"; $("#front").hidden=screen!=="front"; $("#app").hidden=screen!=="app";
   $("#demoScreen").value=screen;
   if(screen==="signup") renderPlanPick();
   if(screen!=="app") return;
   document.querySelectorAll(".navbtn").forEach(b=>b.setAttribute("aria-current",b.dataset.view===view?"page":"false"));
   $("#appbarPlan").textContent=PLAN_NAME[plan]+" plan";
   closeSheet();
-  $("#main").innerHTML=({home,tools,courses,account})[view]();
+  $("#main").innerHTML=({home,tools,account})[view]();
   bind();
 }
 function header(t,sub){return `<div class="top"><div><h1>${t}</h1>${sub?`<p class="small" style="margin:4px 0 0">${sub}</p>`:""}</div><span class="pill">${PLAN_NAME[plan]} plan</span></div>`}
 
+function stepName(id){return TOOLS.find(t=>t.id===id).name}
 function home(){
-  const c=COURSES.find(c=>has(c.plan)&&c.done<c.lessons.length)||COURSES[0];
-  const pct=Math.round(c.done/c.lessons.length*100);
-  const myTools=TOOLS.filter(t=>has(t.plan));
+  const next=STEPS.find(id=>!stepsDone[id]);
+  const n=STEPS.filter(id=>stepsDone[id]).length;
+  const nt=next&&TOOLS.find(t=>t.id===next);
+  const main=!nt?`<h2>You have done every step. Well done!</h2><p style="margin:0">Your apartment is ready to rent. Keep an eye on your bills each month.</p>`
+    :`<span class="small">Your next step · ${n+1} of ${STEPS.length}</span><h2>${nt.name}</h2><p style="margin:0">${nt.desc}</p>
+      ${has(nt.plan)?`<button class="btn big" data-step="${nt.id}">Start this step</button>`:`<button class="btn big" data-upgrade="${nt.plan}" data-toolid="${nt.id}">Get ${PLAN_NAME[nt.plan]} plan</button>`}`;
   return header("Welcome back","Here is your next step.")+`
-  <div class="grid">
-    <div class="card"><span class="small">Your next lesson</span><h2>${c.name}</h2>
-      <div class="bar" aria-label="${pct}% complete"><span style="width:${pct}%"></span></div>
-      <div class="row"><span class="small">${c.done} of ${c.lessons.length} lessons</span><button class="btn" data-go="courses">Continue</button></div></div>
-    <div class="card"><span class="small">Your tools</span><h2>${myTools.length} tools ready for you</h2>
-      <p class="small" style="margin:0">${myTools.slice(0,3).map(t=>t.name).join(" · ")}</p>
-      <div class="row"><span></span><button class="btn ghost" data-go="tools">Open my tools</button></div></div>
-    <div class="card"><span class="small">Your plan</span><h2>${PLAN_NAME[plan]} plan</h2>
-      <p class="small" style="margin:0">Renews on 1 December 2026.</p>
-      <div class="row"><span></span><button class="btn ghost" data-go="account">See my plan</button></div></div>
-  </div>
-  <div class="note">Example content. Zebo writes the real tools and lessons; the app only holds and unlocks them by plan.</div>`;
+  <div class="nextcard">${main}</div>
+  <div class="card"><h2>Your path</h2>
+    <ol class="path">${STEPS.map((id,i)=>{const t=TOOLS.find(x=>x.id===id);const cls=stepsDone[id]?"done":id===next?"now":"";
+      return `<li class="${cls}"><button type="button" data-step="${id}"><span class="num">${stepsDone[id]?"&#10003;":i+1}</span><span>${t.name}</span>${has(t.plan)?"":`<span class="lk">&#128274; ${PLAN_NAME[t.plan]}</span>`}</button></li>`}).join("")}</ol></div>
+  <h2 style="margin-top:6px">Short lessons</h2>
+  ${lessons()}`;
 }
 
 function tools(){
-  return header("Your tools","Simple, step-by-step help to get your apartment ready and rented.")+`
-  <div class="grid">${TOOLS.map(t=>{const ok=has(t.plan);return `
+  return header("My tools","Simple, step-by-step help to get your apartment ready and rented.")+`
+  <div class="grid">${TOOLS.filter(t=>!t.soon).map(t=>{const ok=has(t.plan);return `
     <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${t.type}</span>${ok?"":lockPill(t.plan)}</div>
-      <h3>${t.name}${t.live?` <span class="pill" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Working draft</span>`:t.soon?` <span class="pill lock" style="font-size:.72rem;padding:1px 8px;vertical-align:middle">Coming ${t.soon}</span>`:""}</h3><p class="small" style="margin:0">${t.desc}</p>
-      <div class="row"><span></span>${ok?`<button class="btn ${t.id==="calc"?"":"ghost"}" data-tool="${t.id}">Open</button>`:`<button class="btn ghost" data-upgrade="${t.plan}" data-toolid="${t.id}">Get ${PLAN_NAME[t.plan]} plan</button>`}</div></div>`}).join("")}</div>
+      <h3>${t.name}</h3><p class="small" style="margin:0">${t.desc}</p>
+      <div class="row"><span></span>${ok?`<button class="btn ghost" data-tool="${t.id}">Open</button>`:`<button class="btn ghost" data-upgrade="${t.plan}" data-toolid="${t.id}">Get ${PLAN_NAME[t.plan]} plan</button>`}</div></div>`}).join("")}</div>
   <p class="small" style="margin:0">These tools give general guidance only. They are not legal, tax or financial advice. Full details are at the bottom of each tool.</p>
   <div id="toolPanel"></div>
-  <div class="card" id="calcCard"><h2>How much will I earn?</h2>
-    <p class="small" style="margin:0">Tenants who stay 3 months or more pay by the month. Change the numbers to match your apartment.</p>
+  ${has("premium")?`<div class="card" id="calcCard"><h2>How much will I earn?</h2>
+    <p class="small" style="margin:0">Zebo's rule: what matters is what is left after every cost, not the rent. Change the numbers to match your apartment.</p>
     <div class="calc">
+      <h3>Money in</h3>
       <div class="field"><label for="rent">Monthly rent from your tenant ($)</label><input id="rent" type="number" min="0" value="3200"></div>
-      <div class="field"><label for="occ">How much of the year it is rented (%)</label><input id="occ" type="number" min="0" max="100" value="85"></div>
-      <div class="field"><label for="lease">Your mortgage, HOA and taxes ($ a month)</label><input id="lease" type="number" min="0" value="1700"></div>
-      <div class="field"><label for="costs">Bills, cleaning and supplies ($ a month)</label><input id="costs" type="number" min="0" value="450"></div>
+      <div class="field"><label for="empty">Empty weeks a year, between tenants</label><input id="empty" type="number" min="0" max="52" value="4"><span class="tip">Empty weeks still cost you money.</span></div>
+      <h3>Every month, even when empty</h3>
+      <div class="field"><label for="lease">Mortgage, HOA and taxes ($)</label><input id="lease" type="number" min="0" value="1700"></div>
+      <div class="field"><label for="bfees">Building fees: trash, tech fee and more ($)</label><input id="bfees" type="number" min="0" value="60"><span class="tip">Ask the building for these in writing.</span></div>
+      <div class="field"><label for="fixed">Insurance and internet ($)</label><input id="fixed" type="number" min="0" value="150"></div>
+      <h3>Changes with your tenant</h3>
+      <div class="field"><label for="costs">Power, water, cleaning, supplies ($ a month)</label><input id="costs" type="number" min="0" value="300"></div>
+      <h3>Once in a while</h3>
+      <div class="field"><label for="yearly">New towels, linen, deep cleaning, repairs ($ a year)</label><input id="yearly" type="number" min="0" value="1200"></div>
+      <h3>One time, to get started</h3>
+      <div class="field"><label for="setup">Furniture, photos and setup ($)</label><input id="setup" type="number" min="0" value="9000"></div>
     </div>
     <div class="row" style="flex-wrap:wrap"><div><span class="small">Money in</span><div class="result" id="rRev"></div></div><div><span class="small">Money out</span><div class="result" id="rCost"></div></div><div><span class="small">Left for you each month</span><div class="result" id="rProfit"></div></div></div>
-  </div>`;
+    <p style="margin:0;font-weight:600" id="rBack"></p>
+  </div>`:""}`;
 }
 
-function courses(){
-  return header("Lessons","Short, easy lessons from Zebo. Go at your own pace, we save your place.")+`
-  <div class="grid">${COURSES.map(c=>{const ok=has(c.plan);const pct=Math.round(c.done/c.lessons.length*100);return `
+function lessons(){
+  return `<div class="grid">${COURSES.map(c=>{const ok=has(c.plan);const pct=Math.round(c.done/c.lessons.length*100);return `
     <div class="card ${ok?"":"locked"}"><div class="row"><span class="small">${c.lessons.length} lessons</span>${ok?`<span class="small">${pct}% done</span>`:lockPill(c.plan)}</div>
       <h3>${c.name}</h3>
       ${ok?`<div class="bar"><span style="width:${pct}%"></span></div><ol class="lessons">${c.lessons.map((l,i)=>`<li class="${i<c.done?"done":""}">${l}</li>`).join("")}</ol>`:`<ol class="lessons small">${c.lessons.map(l=>`<li>${l}</li>`).join("")}</ol><button class="btn ghost" data-upgrade="${c.plan}">Get ${PLAN_NAME[c.plan]} plan</button>`}
@@ -354,17 +431,23 @@ function account(){
   <div class="note">In the real app, "Update card" and "Cancel plan" open Stripe's secure billing page, and plan changes are charged there.</div>`;
 }
 
+function stepBar(id){
+  if(!STEPS.includes(id)) return "";
+  return `<div class="row" style="padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px"><span class="small">Step ${STEPS.indexOf(id)+1} of ${STEPS.length} on your path</span>
+    <button class="btn ${stepsDone[id]?"ghost":""}" id="stepDone" type="button">${stepsDone[id]?"&#10003; Done (tap to undo)":"I've finished this step"}</button></div>`;
+}
+function bindStepBar(id){const b=$("#stepDone"); if(b) b.onclick=()=>{markStep(id,!stepsDone[id]); renderChecklist(id);};}
 function renderChecklistInner(id){
   const t=TOOLS.find(x=>x.id===id); const box=$("#toolPanel");
-  if(t.live){box.innerHTML=`<div class="card" style="padding:0;overflow:hidden"><iframe id="liveTool" src="${t.src}" title="${t.name}" style="width:100%;height:900px;border:0;display:block"></iframe></div>`;
-    reveal(box); return;}
+  if(t.live){box.innerHTML=`<div class="card" style="padding:0;overflow:hidden">${stepBar(id)}<iframe id="liveTool" src="${t.src}" title="${t.name}" style="width:100%;height:900px;border:0;display:block"></iframe></div>`;
+    bindStepBar(id); reveal(box); return;}
   const items=CHECKS[id]||[]; done[id]=done[id]||{};
   const n=Object.values(done[id]).filter(Boolean).length;
-  box.innerHTML=`<div class="card"><div class="row"><h2>${t.name}</h2><span class="pill">${n} of ${items.length} done</span></div>
-    <p class="small" style="margin:0">Example items. Zebo writes the real ones; progress is saved per apartment.</p>
-    <div style="display:grid;gap:6px">${items.map((it,i)=>`<label style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" data-i="${i}" ${done[id][i]?"checked":""} style="margin-top:4px;accent-color:var(--teal)"> <span>${it}</span></label>`).join("")}</div></div>`;
-  box.querySelectorAll("input[type=checkbox]").forEach(c=>c.onchange=()=>{done[id][c.dataset.i]=c.checked;renderChecklist(id);});
-  reveal(box);
+  box.innerHTML=`<div class="card" style="padding:0;overflow:hidden">${stepBar(id)}<div style="padding:18px;display:grid;gap:12px"><div class="row"><h2>${t.name}</h2><span class="pill">${n} of ${items.length} done</span></div>
+    ${WHY[id]?`<div class="note">${WHY[id]}</div>`:""}
+    <div style="display:grid;gap:12px">${items.map((it,i)=>`<label style="display:flex;gap:12px;align-items:flex-start;font-size:1.05rem"><input type="checkbox" data-i="${i}" ${done[id][i]?"checked":""} style="margin-top:5px;width:22px;height:22px;accent-color:var(--teal)"> <span>${it}</span></label>`).join("")}</div></div></div>`;
+  box.querySelectorAll("input[type=checkbox]").forEach(c=>c.onchange=()=>{done[id][c.dataset.i]=c.checked; try{localStorage.setItem("f2s-checks",JSON.stringify(done))}catch(e){} renderChecklist(id);});
+  bindStepBar(id); reveal(box);
 }
 const isPhone=()=>matchMedia("(max-width:760px)").matches;
 function reveal(el){if(!isPhone()) el.scrollIntoView({behavior:"smooth"});}
@@ -381,9 +464,15 @@ window.addEventListener("popstate",closeSheet);
 function money(n){return "$"+Math.round(n).toLocaleString("en-US")}
 function calc(){
   const v=id=>parseFloat($(id)?.value)||0; if(!$("#rent")) return;
-  const rev=v("#rent")*v("#occ")/100, cost=v("#lease")+v("#costs");
+  const share=Math.max(0,52-Math.min(52,v("#empty")))/52;
+  const rev=v("#rent")*share;
+  const cost=v("#lease")+v("#bfees")+v("#fixed")+v("#costs")*share+v("#yearly")/12;
+  const left=rev-cost;
   $("#rRev").textContent=money(rev); $("#rCost").textContent=money(cost);
-  const p=$("#rProfit"); p.textContent=money(rev-cost); p.style.color=rev-cost>=0?"var(--good)":"#B4443A";
+  const p=$("#rProfit"); p.textContent=money(left); p.style.color=left>=0?"var(--good)":"#B4443A";
+  const st=v("#setup");
+  $("#rBack").textContent= left<=0 ? "Right now this apartment loses money each month. Try a higher rent or fewer empty weeks."
+    : st>0 ? `You earn back your setup money in about ${Math.ceil(st/left)} months.` : "";
 }
 function openDialog(title,text,onOk,okLabel,cancelLabel){
   $("#dlgTitle").textContent=title; $("#dlgText").textContent=text;
@@ -397,9 +486,12 @@ $("#dlgCancel").onclick=closeDialog;
 document.addEventListener("keydown",e=>{if(e.key==="Escape") closeDialog()});
 
 function setPlan(p){plan=p; $("#demoPlan").value=p; render();}
+// Open a step from Home: go to My tools and open it there
+function openTool(id){const t=TOOLS.find(x=>x.id===id); if(!has(t.plan)){upsell(t.plan,id,()=>openTool(id));return;}
+  if(view!=="tools") go("tools"); renderChecklist(id);}
 // Upgrade pop-up copy: sell the outcome, short and warm
 const PLAN_PITCH={
-  premium:["Get all the checklists","Easy step-by-step lists for furniture, internet and the final touches. Part of the Premium plan."],
+  premium:["Get all the steps","Easy step-by-step lists for furniture, bills and WiFi, the final touches, and what you really earn. Part of the Premium plan."],
   full:["Get every tool","Everything in Premium, plus ready-made rental ads and a welcome guide for your tenants. Part of the Full plan."]};
 const TOOL_PITCH={
   listing:["Put your place online for rent","We write your rental ad for Zillow, Apartments.com, Furnished Finder and more. You just copy and paste. Part of the Full plan."]};
@@ -415,13 +507,14 @@ function bind(){
     else openDialog(`Switch to ${PLAN_NAME[p]}?`,`You keep everything in your current plan until the end of the paid month.`,()=>setPlan(p),`Switch to ${PLAN_NAME[p]}`,"Not now");
   });
   document.querySelectorAll("[data-portal]").forEach(b=>b.onclick=()=>openDialog(b.dataset.portal==="cancel"?"Cancel your plan":"Update your card","In the real app this opens Stripe's secure billing page. Access stays until the end of the paid month."));
+  document.querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>openTool(b.dataset.step));
   document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{
     if(b.dataset.tool==="calc"){$("#calcCard").scrollIntoView({behavior:"smooth"});$("#rent").focus();}
-    else if(TOOLS.find(t=>t.id===b.dataset.tool).live) renderChecklist(b.dataset.tool);
+    else if(TOOLS.find(t=>t.id===b.dataset.tool).live||TOOLS.find(t=>t.id===b.dataset.tool).inline) renderChecklist(b.dataset.tool);
     else if(TOOLS.find(t=>t.id===b.dataset.tool).soon){const t=TOOLS.find(t=>t.id===b.dataset.tool); openDialog(t.name,`Coming soon. We are finishing it now (ready ${t.soon}).`);}
     else openDialog(TOOLS.find(t=>t.id===b.dataset.tool).name,"In the real app this opens the tool, saved to the member's own account.");
   });
-  ["#rent","#occ","#lease","#costs"].forEach(id=>{const el=$(id); if(el) el.oninput=calc;});
+  ["#rent","#empty","#lease","#bfees","#fixed","#costs","#yearly","#setup"].forEach(id=>{const el=$(id); if(el) el.oninput=calc;});
   calc();
   const so=$("#signout"); if(so) so.onclick=()=>show("login");
   const hb=$("#helpBtn"); if(hb) hb.onclick=()=>openDialog("We are here to help","In the real app this opens WhatsApp or email to the Flat 2 Scale team.");
@@ -429,7 +522,7 @@ function bind(){
 window.addEventListener("message",e=>{const f=$("#liveTool");if(!f||e.source!==f.contentWindow||!e.data)return;
   if(e.data.f2sHeight) f.style.height=Math.max(400,e.data.f2sHeight)+"px";
   // A tool asks to open the next tool, e.g. onboarding -> listing activation
-  if(e.data.f2sOpenTool){const t=TOOLS.find(x=>x.id===e.data.f2sOpenTool); if(!t||!t.live) return;
+  if(e.data.f2sOpenTool){const t=TOOLS.find(x=>x.id===e.data.f2sOpenTool); if(!t||!(t.live||t.inline)) return;
     const openIt=()=>{renderChecklist(t.id); const nf=$("#liveTool"); if(nf) nf.src=t.src+"?from=onboarding"; $("#toolPanel").scrollTop=0;};
     if(!has(t.plan)){upsell(t.plan,t.id,openIt);return;}
     openIt();}
@@ -443,7 +536,9 @@ function renderPlanPick(){
   document.querySelectorAll("input[name=suPlan]").forEach(r=>r.onchange=()=>{pick=r.value;});
 }
 $("#loginForm").addEventListener("submit",e=>{e.preventDefault(); show("app");});
-$("#toSignup").onclick=()=>show("signup");
+$("#toSignup").onclick=()=>show("front");
+$("#frontJoin").onclick=()=>show("signup");
+$("#frontSignin").onclick=()=>show("login");
 $("#toLogin").onclick=()=>show("login");
 $("#forgot").onclick=()=>openDialog("Forgot your password?","No problem. We will email you a link to set a new one.");
 $("#signupForm").addEventListener("submit",e=>{e.preventDefault();
