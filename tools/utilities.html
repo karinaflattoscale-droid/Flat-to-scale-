@@ -117,7 +117,7 @@ tfoot td{font-weight:700;font-family:var(--display)}
 <header class="top"><div class="wrap">
   <h1>Power, water and WiFi</h1>
   <p>Get power, gas, water, internet and smart devices working before a 90+ night guest moves in, and keep every provider's contact in one place. Tick each step as you go. Anything that does not apply to your unit: tap <strong style="color:#fff">N/A</strong>.</p>
-  <span class="draft">Draft v0.1 for Zebo's review</span>
+  <span class="draft">Draft v0.2 for Zebo's review</span>
 </div></header>
 
 <main><div class="wrap">
@@ -198,7 +198,9 @@ const SECTIONS=[
  ]},
  {id:"water",name:"Water, sewer and trash",steps:[
   ["w_who","Confirmed who pays water, sewer and trash","If the building pays, mark the provider below as N/A"],
-  ["w_call","Know who to call for a leak or a missed pickup","Add the number under Provider contacts"]
+  ["w_call","Know who to call for a leak or a missed pickup","Add the number under Provider contacts"],
+  ["w_leak","Leak check before the first tenant","No toilet keeps running, nothing drips under the sinks, and the water meter does not move when every tap is off"],
+  ["w_bill","Every month: look at the water bill","If it suddenly goes up, ask a plumber or the building for a leak check. Hidden leaks can make a bill many times higher"]
  ]},
  {id:"net",name:"Internet and WiFi",note:"Long-stay guests often work from home. Reliable internet is one of the first things they ask about.",steps:[
   ["n_check","Checked which providers serve the address","Enter the address on the FCC National Broadband Map to see every internet provider and speed available there",null,"https://broadbandmap.fcc.gov/"],
