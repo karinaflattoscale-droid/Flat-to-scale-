@@ -240,12 +240,12 @@ const PLAN_NAME={basic:"Basic",premium:"Premium",full:"Full"};
 const PLANS=[
   {id:"basic",price:"Price set by Zebo",items:["Onboarding and listing checklist, cleaning instructions and move-in inspection report","Course 1: Launch your first furnished rental","Monthly member email"]},
   {id:"premium",price:"Price set by Zebo",items:["Everything in Basic","Furnishing, utilities and WiFi, final touches, moodboard generator and calculators","Course 2: Mid-term rentals (90+ nights)"]},
-  {id:"full",price:"Price set by Zebo",items:["Everything in Premium","Digital welcome book builder","Course 3: Scaling to 5+ units","Quarterly business review with Zebo"]}
+  {id:"full",price:"Price set by Zebo",items:["Everything in Premium","Listing publish pack: listings for 6 rental sites","Digital welcome book builder","Course 3: Scaling to 5+ units","Quarterly business review with Zebo"]}
 ];
 // Zebo's toolkit list (Nov 10): 5 checklists and 6 tools. Plan per item is a guess for Zebo to confirm.
 const TOOLS=[
   {id:"onboard",name:"Property onboarding and listing checklist",desc:"Size, exposure, trash, parking, amenities and photos, all in one place. Writes your listing draft from your answers.",plan:"basic",type:"Checklist",live:true,src:"tools/onboarding.html"},
-  {id:"listing",name:"Listing publish pack",desc:"Turns your onboarded property into a ready-to-paste listing for Zillow, Apartments.com, Furnished Finder, Zumper, CHBO and Facebook Marketplace.",plan:"premium",type:"Tool",live:true,src:"tools/listing.html"},
+  {id:"listing",name:"Listing publish pack",desc:"Turns your onboarded property into a ready-to-paste listing for Zillow, Apartments.com, Furnished Finder, Zumper, CHBO and Facebook Marketplace.",plan:"full",type:"Tool",live:true,src:"tools/listing.html"},
   {id:"furnish",name:"Furnishing and inventory checklist",desc:"Room by room, with quantities for your bedrooms, beds and guests. Count what you have and see what is still to get.",plan:"premium",type:"Checklist",live:true,src:"tools/furnishing.html"},
   {id:"utilities",name:"Utilities and WiFi setup",desc:"Power, gas, water and internet set up before move-in, every provider's contact in one place, and a guest WiFi card to copy.",plan:"premium",type:"Checklist",live:true,src:"tools/utilities.html"},
   {id:"consumables",name:"Final touches and consumables",desc:"Toiletries, paper goods, cleaning supplies and a starter pantry, with quantities worked out for your guests and rooms, one group at a time.",plan:"premium",type:"Checklist",live:true,src:"tools/consumables.html"},
