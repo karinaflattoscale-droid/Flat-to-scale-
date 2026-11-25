@@ -153,8 +153,9 @@ details[open] .chev{transform:rotate(90deg)}
 
   <section class="panel" aria-labelledby="next-h" style="margin-top:18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;border-left:4px solid var(--teal)">
     <div><h2 id="next-h" style="font-size:1.05rem">Next step: put your place online for rent</h2>
-      <p style="margin:4px 0 0;color:var(--muted);font-size:.92rem">Your answers come with you. Add the rent, dates and photos, and we write your rental ad for Zillow, Apartments.com, Furnished Finder and more.</p></div>
-    <button type="button" class="btn solid" id="toListing">Write my rental ad &#8594;</button>
+      <p style="margin:4px 0 0;color:var(--muted);font-size:.92rem">Your answers come with you. Add the rent, dates and photos, and we write your rental ad for Zillow, Apartments.com, Furnished Finder and more. You can also put it on Booking.com and Vrbo, step by step.</p></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" class="btn solid" id="toListing">Write my rental ad &#8594;</button>
+    <button type="button" class="btn" id="toPlatforms">Put it on Booking.com and Vrbo &#8594;</button></div>
   </section>
 
   <div class="foot">
@@ -464,6 +465,10 @@ render();
 $("toListing").addEventListener("click",()=>{
   if(window.parent!==window){try{parent.postMessage({f2sOpenTool:"listing"},"*");return;}catch(e){}}
   location.href="listing.html?from=onboarding";
+});
+$("toPlatforms").addEventListener("click",()=>{
+  if(window.parent!==window){try{parent.postMessage({f2sOpenTool:"platforms"},"*");return;}catch(e){}}
+  location.href="platforms.html?from=onboarding";
 });
 if(window.parent!==window){
   document.documentElement.classList.add("embedded");
