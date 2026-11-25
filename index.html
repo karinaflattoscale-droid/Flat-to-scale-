@@ -311,6 +311,7 @@ const PLANS=[
 const TOOLS=[
   {id:"onboard",name:"Your apartment details",desc:"Answer easy questions about your apartment once. We keep it all in one place and turn your answers into a rental ad.",plan:"basic",type:"Step by step",live:true,src:"tools/onboarding.html"},
   {id:"listing",name:"Put your place online for rent",desc:"We write your rental ad for Zillow, Apartments.com, Furnished Finder, Zumper, CHBO and Facebook Marketplace. You just copy and paste.",plan:"full",type:"Helper",live:true,src:"tools/listing.html"},
+  {id:"platforms",name:"Rent on Booking.com and Vrbo",desc:"Put your apartment on Booking.com and Vrbo, step by step. We write the text, you copy and paste.",plan:"full",type:"Helper",live:true,src:"tools/platforms.html"},
   {id:"furnish",name:"Furnish your apartment",desc:"A room-by-room shopping list, sized to your beds and the people staying. Tick what you already have and see what is left to buy.",plan:"premium",type:"Step by step",live:true,src:"tools/furnishing.html"},
   {id:"utilities",name:"Power, water and WiFi",desc:"Get everything switched on before your tenant arrives, with every provider's phone number in one place and a WiFi card for your tenant.",plan:"premium",type:"Step by step",live:true,src:"tools/utilities.html"},
   {id:"consumables",name:"Final touches",desc:"Towels, toiletries, cleaning supplies and a few kitchen basics, so your tenant feels at home from day one. One list at a time.",plan:"premium",type:"Step by step",live:true,src:"tools/consumables.html"},
@@ -501,7 +502,8 @@ const PLAN_PITCH={
   premium:["Get all the steps","Easy step-by-step lists for furniture, bills and WiFi, the final touches, and what you really earn. Part of the Premium plan."],
   full:["Get every tool","Everything in Premium, plus ready-made rental ads and a welcome guide for your tenants. Part of the Full plan."]};
 const TOOL_PITCH={
-  listing:["Put your place online for rent","We write your rental ad for Zillow, Apartments.com, Furnished Finder and more. You just copy and paste. Part of the Full plan."]};
+  listing:["Put your place online for rent","We write your rental ad for Zillow, Apartments.com, Furnished Finder and more. You just copy and paste. Part of the Full plan."],
+  platforms:["Rent on Booking.com and Vrbo","Put your apartment on Booking.com and Vrbo, step by step, with a damage deposit. Part of the Full plan."]};
 function upsell(p,toolId,after){
   const [t,txt]=TOOL_PITCH[toolId]||PLAN_PITCH[p]||[`Get ${PLAN_NAME[p]} plan`,`Included in the ${PLAN_NAME[p]} plan.`];
   openDialog(t,txt,()=>{setPlan(p); after&&after();},`Get ${PLAN_NAME[p]} plan`,"Not now");
