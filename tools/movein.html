@@ -168,7 +168,7 @@ details[open] .chev{transform:rotate(90deg)}
 <header class="top"><div class="wrap">
   <h1>Move-in check</h1>
   <p>Walk through the apartment with your tenant on move-in day. For each thing, tap <strong style="color:#fff">Good</strong> or <strong style="color:#fff">Needs attention</strong>, and add photos. You both sign at the end, then print it or save it as a PDF. You each keep a copy. Anything your apartment does not have: tap <strong style="color:#fff">N/A</strong>.</p>
-  <span class="draft">Draft v0.2 for Zebo's review · suggested wording</span>
+  <span class="draft">Draft v0.3 for Zebo's review · suggested wording</span>
 </div></header>
 
 <main><div class="wrap">
@@ -212,7 +212,7 @@ details[open] .chev{transform:rotate(90deg)}
   <div class="sections" id="sections"></div>
 
   <div class="foot">
-    <div><strong>Where this fits:</strong> the furniture list comes from <em>Furnish your apartment</em>. The meters and WiFi are in <em>Power, water and WiFi</em>. Clean before the check with the <em>Cleaning guide</em>.</div>
+    <div><strong>Where this fits:</strong> the apartment name and rooms come from <em>Your apartment details</em>. The furniture list comes from <em>Furnish your apartment</em>. The meters and WiFi are in <em>Power, water and WiFi</em>. Clean before the check with the <em>Cleaning guide</em>.</div>
     <div><strong>N/A (not applicable):</strong> tap it on anything your apartment does not have, for example a dishwasher. A whole room you do not have, like a balcony, has its own N/A button.</div>
     <div><strong>Your answers and photos are saved in this browser only.</strong> Print or save the report as a PDF to keep it. <strong>Start a new move-in</strong> clears the tenant, ticks, photos and signatures. Your apartment details and N/A choices stay.</div>
     <div><strong>Florida deposits:</strong> after the tenant moves out, you have 15 days to return the deposit, or 30 days to send a written notice by certified mail if you plan to keep part of it (Florida Statutes, section 83.49). This report helps you show why. Rules change, so check the current law.</div>
@@ -308,8 +308,7 @@ const SAFETY=[
  ["phone","Tenant has your number for emergencies",""]
 ];
 const ACCESS=[
- ["a_door","Door code, key card or key works","Try it from outside, with the door closed"],
- ["a_code","New door code, if you changed it","New code","text"]
+ ["a_door","Door code, key card or key works","Try it from outside, with the door closed"]
 ];
 const CLEAN=[
  ["c_floor","Floors, surfaces and furniture clean",""],
@@ -328,6 +327,7 @@ const SUPPLIES=[
 ];
 const METERS=[["elec","Electricity","kWh"],["water","Water","gallons"],["gas","Gas","therms"]];
 const KEYS=[["front","Front door keys"],["fob","Building fobs or cards"],["mailk","Mailbox keys"],["garage","Garage remote or parking pass"],["other","Other keys"]];
+const CODES=[["codes","Door, gate or lockbox codes given","e.g. Front door 4821, gate 1190","text"]];
 const KEYS_RATE=[["wifi","WiFi works","Open a web page on your phone"],["wifin","WiFi name and password","Network name / password","text"],["wifig","WiFi name and password given to the tenant",""]];
 
 function sections(){
@@ -338,11 +338,11 @@ function sections(){
   const b=+state.beds; if(b===0) add("bed1","bedroom","Sleeping area"); else for(let i=1;i<=b;i++) add("bed"+i,"bedroom",b>1?"Bedroom "+i:"Bedroom");
   const t=+state.baths; for(let i=1;i<=t;i++) add("bath"+i,"bathroom",t>1?"Bathroom "+i:"Bathroom");
   add("laundry","laundry"); add("outside","outside");
-  out.push({id:"things",name:"Furniture and things",note:"How many there are, and how they look. Numbers come from your Furnish your apartment list when you filled it in.",items:THINGS.map(([k,t])=>["t_"+k,t,"","both"]),notes:true,photos:true});
+  out.push({id:"things",name:"Furniture and things",note:"Tick what is there: check the number, then tap Good or Needs attention. Write 0 if something is missing. Numbers come from your Furnish your apartment list when you filled it in.",items:THINGS.map(([k,t])=>["t_"+k,t,"","both"]),notes:true,photos:true});
   out.push({id:"supplies",name:"Supplies in place",note:"Count the towels, then check the basics are out for the tenant. Quantities are on your Final touches list.",items:SUPPLIES,notes:true});
   out.push({id:"safety",name:"Safety",items:SAFETY.map(([k,t,h])=>["s_"+k,t,h]),notes:false});
-  out.push({id:"meters",name:"Meters",note:"Write the number on each meter and take a photo of it. This is where the tenant's bills start.",items:METERS.map(([k,t,u])=>["m_"+k,t,u,"reading"]),photos:true});
-  out.push({id:"keys",name:"Keys and WiFi",note:"How many keys you hand over. At move-out the same number comes back.",items:[...KEYS.map(([k,t])=>["k_"+k,t,"","count"]),...KEYS_RATE.map(([k,t,h,kind])=>["k_"+k,t,h,kind])]});
+  out.push({id:"meters",name:"Meters",note:"Write the number on each meter, then tap + Photo to take a picture of it. This is where the tenant's bills start.",items:METERS.map(([k,t,u])=>["m_"+k,t,u,"reading"]),photos:true});
+  out.push({id:"keys",name:"Keys and access",note:"How many keys and fobs you hand over, and which codes. At move-out the same keys come back. Tip: change the door code after each tenant.",items:[...KEYS.map(([k,t])=>["k_"+k,t,"","count"]),...CODES.map(([k,t,h,kind])=>["k_"+k,t,h,kind]),...KEYS_RATE.map(([k,t,h,kind])=>["k_"+k,t,h,kind])]});
   out.push({id:"issues",name:"Problems found and comments",issues:true});
   out.push({id:"sign",name:"Signatures",sign:true});
   return out;
@@ -355,6 +355,13 @@ try{const s=JSON.parse(localStorage.getItem(KEY));if(s){state=Object.assign(stat
 /* First time: take the apartment, bedrooms, bathrooms and counts from the Furnish your apartment list */
 let furn=null; try{furn=JSON.parse(localStorage.getItem("f2s-furnishing-v2"))}catch(e){}
 function furnCount(ids){if(!furn||!furn.have)return null;let n=0,any=false;ids.forEach(i=>{if(furn.have[i]!=null&&furn.have[i]!==""){n+=+furn.have[i]||0;any=true}});return any?n:null}
+/* The apartment name and rooms come from Your apartment details (not the sample) */
+let onb=null; try{onb=JSON.parse(localStorage.getItem("f2s-onboarding-v1"))}catch(e){}
+if(state.rd&&state.rd.a_code&&!state.rd.k_codes){state.rd.k_codes=state.rd.a_code}
+if(onb&&!onb.sample&&onb.v&&(firstRun||!state.apt)){const v=onb.v;const nm=v.nick||v.addr;if(nm)state.apt=nm;
+  if(v.bedrooms)state.beds=v.bedrooms==="Studio"?"0":String(Math.min(4,parseInt(v.bedrooms)||1));
+  if(v.baths)state.baths=String(Math.min(3,Math.max(1,Math.floor(parseFloat(v.baths)||1))));
+  if(nm)firstRun=false;}
 if(firstRun&&furn){ if(furn.unit)state.apt=furn.unit; if(furn.bedrooms!=null)state.beds=String(Math.min(4,+furn.bedrooms)); if(furn.baths!=null)state.baths=String(Math.min(3,Math.max(1,+furn.baths))); }
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast("This device is full. Print or save the report now.")}};
 let filter="all";
@@ -389,7 +396,7 @@ function itemHTML(it){
   let ctrl="";
   if(!na){
     if(kind==="count"||kind==="both"){const v=cntVal(k);const fromF=(state.cnt[k]===undefined||state.cnt[k]==="")&&v!=="";ctrl+=`${fromF?'<span class="from">from your list</span>':""}<input class="cnt" type="number" min="0" inputmode="numeric" data-cnt="${k}" value="${esc(v)}" placeholder="Count" aria-label="How many: ${esc(t)}">`}
-    if(kind==="reading") ctrl+=`<input class="reading" inputmode="decimal" data-rd="${k}" value="${esc(state.rd[k])}" placeholder="Reading, ${esc(h)}" aria-label="Meter reading: ${esc(t)}">`;
+    if(kind==="reading"){const np=photos.filter(p=>p.sub===k).length;ctrl+=`<input class="reading" inputmode="decimal" data-rd="${k}" value="${esc(state.rd[k])}" placeholder="Reading, ${esc(h)}" aria-label="Meter reading: ${esc(t)}"><label class="btn small addph">${np?"Photo taken ✓":"+ Photo"}<input type="file" accept="image/*" data-addph="meters" data-sub="${k}" aria-label="Photo of the ${esc(t)} meter"></label>`;}
     if(kind==="text") ctrl+=`<input class="reading" style="width:220px" data-rd="${k}" value="${esc(state.rd[k])}" placeholder="${esc(h)}" aria-label="${esc(t)}">`;
     if(kind!=="count"&&kind!=="reading"&&kind!=="text") ctrl+=rateHTML(k,t);
   }
@@ -485,7 +492,7 @@ host.addEventListener("change",async e=>{
   if(t.dataset.rd){state.rd[t.dataset.rd]=t.value;save();refocus();return}
   if(t.dataset.addph){
     const sec=t.dataset.addph, files=[...t.files]; if(!files.length)return; toast("Adding photos…");
-    for(const f of files){const data=await shrink(f);if(!data)continue;const p={id:Date.now()+"-"+Math.random().toString(36).slice(2,7),sec,data,ts:f.lastModified&&f.lastModified<Date.now()?f.lastModified:Date.now()};await dbPut(p);photos.push(p)}
+    for(const f of files){const data=await shrink(f);if(!data)continue;const p={id:Date.now()+"-"+Math.random().toString(36).slice(2,7),sec,sub:t.dataset.sub||"",data,ts:f.lastModified&&f.lastModified<Date.now()?f.lastModified:Date.now()};await dbPut(p);photos.push(p)}
     if(!db) toast("Photos show now, but this browser cannot keep them. Print the report before you close it."); else toast(files.length>1?files.length+" photos added":"Photo added");
     render(); return;
   }
@@ -518,7 +525,7 @@ function buildReport(){
     const its=sec.items;
     h+=`<div class="rsec"><h2>${esc(sec.name)}</h2>`;
     if(sec.id==="meters"){
-      h+=`<table><tr><th>Meter</th><th>Reading</th><th class="u">Unit</th></tr>${its.map(([k,t,u])=>isNA(k)?`<tr class="na"><td>${esc(t)}</td><td colspan="2">N/A</td></tr>`:`<tr><td>${esc(t)}</td><td>${line(state.rd[k])}</td><td>${esc(u)}</td></tr>`).join("")}</table>`;
+      h+=`<table><tr><th>Meter</th><th>Reading</th><th class="u">Unit</th></tr>${its.map(([k,t,u])=>isNA(k)?`<tr class="na"><td>${esc(t)}</td><td colspan="2">N/A</td></tr>`:`<tr><td>${esc(t)}${photos.some(p=>p.sub===k)?' <span class="small">(photo below)</span>':""}</td><td>${line(state.rd[k])}</td><td>${esc(u)}</td></tr>`).join("")}</table>`;
     }else{
       const hasCnt=its.some(i=>i[3]==="count"||i[3]==="both");
       h+=`<table><tr><th>What we checked</th>${hasCnt?'<th class="c">How many</th>':""}<th class="c">Good</th><th class="c">Needs attention</th><th>Note</th></tr>${its.map(([k,t,_h,kind])=>{
@@ -530,7 +537,7 @@ function buildReport(){
     }
     if(sec.notes){const rn=(state.rn[sec.id]||"").trim();h+=rn?`<p class="rnote"><b>Other notes:</b> ${esc(rn)}</p>`:`<p class="rnote"><b>Other notes:</b></p><div class="line"></div>`}
     const ps=photos.filter(p=>p.sec===sec.id);
-    if(ps.length)h+=`<div class="pgrid">${ps.map((p,i)=>`<figure><img src="${p.data}" alt=""><figcaption>${esc(sec.name)} ${i+1} · ${esc(fmtTime(p.ts))}</figcaption></figure>`).join("")}</div>`;
+    if(ps.length)h+=`<div class="pgrid">${ps.map((p,i)=>`<figure><img src="${p.data}" alt=""><figcaption>${p.sub&&(sec.items.find(x=>x[0]===p.sub)||[])[1]?esc(sec.items.find(x=>x[0]===p.sub)[1])+" meter":esc(sec.name)+" "+(i+1)} · ${esc(fmtTime(p.ts))}</figcaption></figure>`).join("")}</div>`;
     h+=`</div>`;
   });
   const sig=w=>state.sig[w]?`<img src="${state.sig[w]}" alt="">`:"";
