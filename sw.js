@@ -1,6 +1,6 @@
 // Keeps the app working offline. Change the version when you upload new files.
-const CACHE = "f2s-app-v14";
-const FILES = ["./", "index.html", "tools/furnishing.html", "tools/onboarding.html", "tools/utilities.html", "tools/consumables.html", "tools/listing.html", "tools/cleaning.html", "tools/movein.html",
+const CACHE = "f2s-app-v15";
+const FILES = ["./", "index.html", "tools/furnishing.html", "tools/onboarding.html", "tools/utilities.html", "tools/consumables.html", "tools/listing.html", "tools/cleaning.html", "tools/movein.html", "tools/platforms.html",
   "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
